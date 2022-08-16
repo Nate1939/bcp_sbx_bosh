@@ -10,13 +10,14 @@ set -euo pipefail
 # Set our current working directory to the root of the BcP repo
 #
 scriptAbsolutePath="$(dirname "$(readlink -f "$BASH_SOURCE")")"
-cd "$scriptAbsolutePath/../../"
+#cd "$scriptAbsolutePath/../../"
+#pwd
 
 ##
 # BcP Setup
 # Validates the current setup and guides the user if deviations are found
 #
-. ".scripts/setup.sh"
+. "bcp/.scripts/setup.sh"
 
 ##
 # !! DEPLOYMENT METADATA !!
