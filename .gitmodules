@@ -1,0 +1,3 @@
+[submodule "bcp"]
+	path = bcp
+	url = https://puzzel@dev.azure.com/puzzel/automation/_git/bosh-control-plane
