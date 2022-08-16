@@ -1,0 +1,32 @@
+---
+- path: /releases/-
+  type: replace
+  value:
+    name: "bosh-azure-cpi"
+    version: "38.0.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/bosh-azure-cpi-release?v=38.0.0"
+    sha1: "42b9d32621d7cdc0a7eda9754197d01fcdaf4593"
+
+- path: /instance_groups/name=bosh/jobs/-
+  type: replace
+  value:
+    name: azure_cpi
+    release: bosh-azure-cpi
+
+- path: /instance_groups/name=bosh/properties/azure?
+  type: replace
+  value:
+    environment: unused
+    subscription_id: unused
+    tenant_id: unused
+    client_id: unused
+    client_secret: unused
+    resource_group_name: unused
+    ssh_public_key: unused
+    use_managed_disks: true
+
+- path: /variables/-
+  type: replace
+  value:
+    name: az_ssh
+    type: ssh
