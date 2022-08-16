@@ -1,0 +1,7 @@
+# Line ending handling upon commit/checkout
+# Default behavior, in case core.autocrlf is not set
+* text=auto
+
+# Denote all files that are truly binary and should not be modified.
+*.png binary
+*.jpg binary

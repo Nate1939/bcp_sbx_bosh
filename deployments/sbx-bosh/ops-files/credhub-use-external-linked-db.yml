@@ -1,0 +1,37 @@
+#- type: replace
+#  path: /instance_groups/name=bosh/jobs/name=credhub/consumes?
+#  value:
+#    postgres:
+#      from: mysql-database
+#      deployment: pxc
+#      properties:
+#        databases.port: 3306
+#        port: 3306
+#        type: mysql
+
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=credhub/properties/credhub/data_storage?
+  value:
+    database: credhub-sbx-db
+    host: q-s0.mysql.default.pxc.bosh
+ #  host: 10.39.148.57
+    password: ((/mgmt-bosh/pxc/credhub-sbx-db-password))
+    port: 3306    
+    require_tls: true 
+    type: mysql
+    username: credhub-sbx-db-username
+    tls_ca: ((/mgmt-bosh/pxc/mysql_server_certificate.ca))
+
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=bbr-credhubdb/properties/data_storage?
+  value:
+    type: mysql
+    username: credhub-sbx-db-username
+    password: ((/mgmt-bosh/pxc/credhub-sbx-db-password))
+    host: q-s0.mysql.*.pxc.bosh
+    port: 3306
+    database: credhub-sbx-db
+    require_tls: true
+    tls_ca: ((/mgmt-bosh/pxc/mysql_server_certificate.ca))

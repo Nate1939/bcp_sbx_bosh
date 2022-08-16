@@ -1,0 +1,68 @@
+#!/bin/bash
+#
+# executable: deployments/BcP-core/deploy
+#
+# Deploy the BcP Core Services
+#
+set -euo pipefail
+
+##
+# Set our current working directory to the root of the BcP repo
+#
+scriptAbsolutePath="$(dirname "$(readlink -f "$BASH_SOURCE")")"
+cd "$scriptAbsolutePath/../../"
+
+##
+# BcP Setup
+# Validates the current setup and guides the user if deviations are found
+#
+. ".scripts/setup.sh"
+
+##
+# !! DEPLOYMENT METADATA !!
+#    Must be filled out!
+#
+DEPLOYMENT_NAME="BcP-core"
+DEPLOYMENT_DIRECTOR="BcP-bosh"
+
+echo_deployment_metadata
+
+##
+# An array of external dependencies (clones) for this deployment.
+# The array must contain the git repository URLs for the dependencies.
+# Example:
+#   "https://github.com/cloudfoundry/bosh-deployment.git"
+#   "https://github.com/cloudfoundry/cf-deployment.git"
+#
+declare -a dependencies=()
+
+load_dependencies ${dependencies[@]+"${dependencies[@]}"}
+
+##
+# Make sure we're targeting the correct Director for this operation
+#
+check_deployment_and_selected_director
+
+##
+# BOSH Deployment Definition: BcP Database Service
+#
+bosh -e "$DEPLOYMENT_DIRECTOR" -d "${DEPLOYMENT_NAME}-database" \
+    deploy --no-redact "deployments/BcP-core/manifests/database.yml"
+
+##
+# Post-deployment activities
+#
+if [[ $? -eq 0 ]]; then
+    #
+    # No activities specified
+    #
+    echo ""
+fi
+
+##
+# DEPLOYMENT OPERATION COMPLETED!
+#
+printf "\n\n"
+bold_green_msg_nn "FINISHED DEPLOYING: "
+green_msg "${DEPLOYMENT_NAME}!"
+printf "\n\n"

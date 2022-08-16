@@ -1,0 +1,72 @@
+#!/bin/bash
+#
+# executable: deployments/sbx-bosh/delete
+#
+# Delete the Sandbox BOSH Director
+#
+set -euo pipefail
+
+##
+# Set our current working directory to the root of the BcP repo
+#
+scriptAbsolutePath="$(dirname "$(readlink -f "$BASH_SOURCE")")"
+cd "$scriptAbsolutePath/../../"
+
+##
+# BcP Setup
+# Validates the current setup and guides the user if deviations are found
+#
+. ".scripts/setup.sh"
+
+##
+# !! DEPLOYMENT METADATA !!
+#    Must be filled out!
+#
+DEPLOYMENT_NAME="sbx-bosh"
+DEPLOYMENT_DIRECTOR="mgmt-bosh"
+
+echo_deployment_metadata
+
+##
+# An array of external dependencies (clones) for this deployment.
+# The array must contain the git repository URLs for the dependencies.
+# Example:
+#   "https://github.com/cloudfoundry/bosh-deployment.git"
+#   "https://github.com/cloudfoundry/cf-deployment.git"
+#
+declare -a dependencies=(
+    "https://github.com/cloudfoundry/bosh-deployment.git"
+)
+
+load_dependencies "${dependencies[@]}"
+
+##
+# Make sure we're targeting the correct Director for this operation
+#
+check_deployment_and_selected_director
+
+##
+# BOSH Deployment Deletion Definition
+#
+bosh -e "$TARGET_DIRECTOR" -d "$DEPLOYMENT_NAME" delete-deployment
+
+##
+# Post-deployment activities
+#
+if [[ $? -eq 0 ]]; then
+
+    # Delete the 'state.json' file from Bitbucket
+    sync_state_file_to_bitbucket "$DEPLOYMENT_NAME" "delete"
+
+    # Clean-up any remaining files
+    rm "deployments/$DEPLOYMENT_NAME/state.json" 2>/dev/null || true
+fi
+
+##
+# DEPLOYMENT OPERATION COMPLETED!
+#
+printf "\n\n"
+bold_green_msg_nn "FINISHED "
+bold_red_msg_nn "--DELETING--"
+green_msg ": ${DEPLOYMENT_NAME}!"
+printf "\n\n"

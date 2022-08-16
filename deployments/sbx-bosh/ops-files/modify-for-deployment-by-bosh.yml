@@ -1,0 +1,80 @@
+---
+# MBUS is used to bootstrap the initial BOSH Agent when no NATS is available
+# In other words, MBUS is used when there is no BOSH Director present
+# Since we have a BOSH Director and NATS, we don't need this.
+- type: remove
+  path: /cloud_provider
+
+- type: remove
+  path: /variables/name=mbus_bootstrap_password
+
+- type: remove
+  path: /variables/name=mbus_bootstrap_ssl
+
+# Again, bootstrapping logic and mainly used for backwards compatibility
+# with the BOSH v1 API. We run BOSH v2, so we don't need this legacy support.
+- type: remove
+  path: /resource_pools
+
+- type: remove
+  path: /instance_groups/name=bosh/resource_pool
+
+# Legacy (BOSH v1) network boostrapping, used before cloud-config became the
+# standard in BOSH v2. We want our sub-BOSHs to use the defined cloud-config
+- type: remove
+  path: /networks
+
+# Legacy (BOSH v1) disk boostrapping, used before cloud-config became the
+# standard in BOSH v2. We want our sub-BOSHs to use the defined cloud-config
+- type: remove
+  path: /disk_pools
+
+# bosh-deployment uses a legacy way to define its desired persistent disks
+- type: remove
+  path: /instance_groups/name=bosh/persistent_disk_pool
+
+- type: replace
+  path: /instance_groups/name=bosh/persistent_disk?
+  value: 65536
+
+# bosh-deployment lets the 'create-env' command fetch the stemcell,
+# so we need to specify one, otherwise BOSH doesn't know what to do
+- type: replace
+  path: /stemcells?/-
+  value:
+    alias: default
+    os: ubuntu-xenial
+    version: latest
+
+- type: replace
+  path: /instance_groups/name=bosh/stemcell?
+  value: default
+
+# 'create-env' has hardcoded the VM size for the director, and so
+# bosh-deployment does not specify a vm_type, which also wouldn't
+# make sense, as it assumes that there is no cloud-config available,
+# because there is no director.
+- type: replace
+  path: /instance_groups/name=bosh/vm_type?
+  value: medium.cpu
+
+# Need an Availability Zone to run this bosh-deployment in
+- type: replace
+  path: /instance_groups/name=bosh/azs?
+  value: [z1z2-dual]
+
+# Change to the correct network
+- type: replace
+  path: /instance_groups/name=bosh/networks/0/name
+  value: sbx-infra
+
+# bosh-deployment assumes the use of `create-env`, which has its own
+# logic for how to deal with updates of the Director.
+# When using BOSH to manage BOSH, we need to define an update block
+- type: replace
+  path: /update?
+  value:
+    canaries: 0
+    max_in_flight: 1
+    canary_watch_time: 30000-180000
+    update_watch_time: 30000-180000

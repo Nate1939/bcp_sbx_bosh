@@ -1,0 +1,44 @@
+---
+# Setup links
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/consumes?
+  value:
+    database: {from: mysql-database, deployment: pxc}
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=bbr-uaadb/consumes?
+  value:
+    database: {from: mysql-database, deployment: pxc}
+
+# Configure UAA DB
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaadb?
+  value:
+    databases:
+      - name: uaa-sbx-db
+        tag: uaa
+    db_scheme: mysql
+    port: 3306
+    roles:
+      - name: uaa-sbx-db-username
+        password: ((/mgmt-bosh/pxc/uaa-sbx-db-password))
+        tag: admin
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/ca_certs?/-
+  value: ((/mgmt-bosh/pxc/mysql_server_certificate.ca))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=bbr-uaadb/properties/uaadb?
+  value:
+    databases:
+      - name: uaa-sbx-db
+        tag: uaa
+    db_scheme: mysql
+    port: 3306
+    roles:
+      - name: uaa-sbx-db-username
+        password: ((/mgmt-bosh/pxc/uaa-sbx-db-password))
+        tag: admin
+
+    ca_cert: ((/mgmt-bosh/pxc/mysql_server_certificate.ca))

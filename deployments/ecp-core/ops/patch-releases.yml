@@ -1,0 +1,24 @@
+---
+- type: replace
+  path: /releases/name=pxc?
+  value:
+    name: "pxc"
+    version: "0.34.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry-incubator/pxc-release?v=0.34.0"
+    sha1: "120e34ff5188277d2fee171fad66d26f62e73b58"
+
+- type: replace
+  path: /releases/name=bpm?
+  value:
+    name: "bpm"
+    version: "1.1.9"
+    url: "https://bosh.io/d/github.com/cloudfoundry/bpm-release?v=1.1.9"
+    sha1: "dcf0582d838a73de29da273552ae79ac3098ee8b"
+
+- type: replace
+  path: /releases/name=minio?
+  value:
+    name: "minio"
+    version: "2021-04-22T15-44-28Z"
+    url: "https://bosh.io/d/github.com/minio/minio-boshrelease?v=2021-04-22T15-44-28Z"
+    sha1: "526c992b8d520fb3d8914a646c612cefdbafc6e8"

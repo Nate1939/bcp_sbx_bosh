@@ -1,0 +1,506 @@
+---
+azs:
+  - name: z1
+    cloud_properties:
+      datacenters:
+        - name: CAP-ppp
+          clusters:
+            - nnn-Hybrid-OSL-MGMT-C01
+              host_group:
+                name: OSL3-Hosts
+                drs_rule: MUST
+
+  - name: z2
+    cloud_properties:
+      datacenters:
+        - name: CAP-ppp
+          clusters:
+            - nnn-Hybrid-OSL-MGMT-C01
+              host_group:
+                name: OSL5-Hosts
+                drs_rule: MUST
+
+  - name: dual
+    cloud_properties:
+      datacenters:
+        - name: CAP-ppp
+          clusters:
+            - nnn-Hybrid-OSL-MGMT-C01
+
+compilation:
+  az: z1
+  network: default
+  vm_type: large
+  workers: 5
+
+disk_types:
+#{{{ Single Disks
+- disk_size: 2048
+  name: 2GB
+  cloud_properties:
+    datastores: &single-mgmt-ds
+    - "nnn-mgmt-std-single-osl3-3par05-L01"
+    - "nnn-mgmt-std-single-osl3-3par05-L02"
+    - "nnn-mgmt-std-single-osl3-3par07-L00"
+    - "nnn-mgmt-std-single-osl5-3par06-L01"
+    - "nnn-mgmt-std-single-osl5-3par06-L02"
+- disk_size: 5120
+  name: 5GB
+  cloud_properties:
+    datastores: *single-mgmt-ds
+- disk_size: 10240
+  name: 10GB
+  cloud_properties:
+    datastores: *single-mgmt-ds
+- disk_size: 51200
+  name: 50GB
+  cloud_properties:
+    datastores: *single-mgmt-ds
+- disk_size: 100240
+  name: 100GB
+  cloud_properties:
+    datastores: *single-mgmt-ds
+- disk_size: 204800
+  name: 200GB
+  cloud_properties:
+    datastores: *single-mgmt-ds
+#}}}
+
+#{{{ Dual Disks
+- disk_size: 2048
+  name: 2GB_dual
+  cloud_properties:
+    datastores: &dual-mgmt-ds
+    - "nnn-mgmt-std-dual-osl3-3par05-L00"
+- disk_size: 5120
+  name: 5GB_dual
+  cloud_properties:
+    datastores: *dual-mgmt-ds
+- disk_size: 10240
+  name: 10GB_dual
+  cloud_properties:
+    datastores: *dual-mgmt-ds
+- disk_size: 51200
+  name: 50GB_dual
+  cloud_properties:
+    datastores: *dual-mgmt-ds
+- disk_size: 100240
+  name: 100GB_dual
+  cloud_properties:
+    datastores: *dual-mgmt-ds
+- disk_size: 204800
+  name: 200GB_dual
+  cloud_properties:
+    datastores: *dual-mgmt-ds
+#}}}
+
+networks:
+#{{{ nnn-sbx-deploy
+- name: default
+  type: manual
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - dual
+    cloud_properties:
+      name: nnn-sbx-deploy.nnn1.osl.zzz.net
+    dns:
+    - 10.64.161.68
+    - 10.64.161.69
+    gateway: 10.64.153.1
+    range: 10.64.153.0/24
+    reserved:
+    - 10.64.153.1-10.64.153.10
+    static:
+    - 10.64.153.11
+    - 10.64.153.12
+    - 10.64.153.13
+    - 10.64.153.14
+    - 10.64.153.15
+#}}}
+
+#{{{ nnn-sbx-services
+- name: services
+  type: manual
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - dual
+    cloud_properties:
+      name: nnn-sbx-services.nnn1.osl.zzz.net
+    dns:
+    - 10.64.161.68
+    - 10.64.161.69
+    gateway: 10.64.154.1
+    range: 10.64.154.0/23
+    reserved:
+    - 10.64.154.1-10.64.154.10
+#}}}
+
+#{{{ nnn-sbx-iso-dev
+- name: sbx-iso-dev
+  type: manual
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - dual
+    cloud_properties:
+      name: nnn-sbx-iso-dev.nnn1.osl.zzz.net
+    dns:
+    - 10.64.161.68
+    - 10.64.161.69
+    gateway: 10.64.161.193
+    range: 10.64.161.192/27
+    reserved:
+    - 10.64.161.193-10.64.161.197
+    static:
+    - 10.64.161.198
+    - 10.64.161.199
+#}}}
+
+#{{{ nnn-sbx-iso-test
+- name: sbx-iso-test
+  type: manual
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - dual
+    cloud_properties:
+      name: nnn-sbx-iso-test.nnn1.osl.zzz.net
+    dns:
+    - 10.64.161.68
+    - 10.64.161.69
+    gateway: 10.64.161.225
+    range: 10.64.161.224/27
+    reserved:
+    - 10.64.161.225-10.64.161.230
+    static:
+    - 10.64.161.231
+    - 10.64.161.232
+#}}}
+
+#{{{ nnn-sbx-iso-qa
+- name: sbx-iso-qa
+  type: manual
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - dual
+    cloud_properties:
+      name: nnn-sbx-iso-qa.nnn1.osl.zzz.net
+    dns:
+    - 10.64.161.68
+    - 10.64.161.69
+    gateway: 10.64.152.1
+    range: 10.64.152.0/27
+    reserved:
+    - 10.64.152.1-10.64.152.5
+    static:
+    - 10.64.152.6
+    - 10.64.152.7
+#}}}
+
+#{{{ nnn-sbx-iso-uat
+- name: sbx-iso-uat
+  type: manual
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - dual
+    cloud_properties:
+      name: nnn-sbx-iso-uat.nnn1.osl.zzz.net
+    dns:
+    - 10.64.161.68
+    - 10.64.161.69
+    gateway: 10.64.152.97
+    range: 10.64.152.96/27
+    reserved:
+    - 10.64.152.97-10.64.152.101
+    static:
+    - 10.64.152.102
+    - 10.64.152.103
+#}}}
+
+#{{{ nnn-sbx-iso-trans
+- name: sbx-iso-trans
+  type: manual
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - dual
+    cloud_properties:
+      name: nnn-sbx-iso-trans.nnn1.osl.zzz.net
+    dns:
+    - 10.64.161.68
+    - 10.64.161.69
+    gateway: 10.64.152.65
+    range: 10.64.152.64/27
+    reserved:
+    - 10.64.152.65-10.64.152.69
+    static:
+    - 10.64.152.70
+    - 10.64.152.71
+#}}}
+
+#{{{ nnn-sbx-iso-perf
+- name: sbx-iso-perf
+  type: manual
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - dual
+    cloud_properties:
+      name: nnn-sbx-iso-perf.nnn1.osl.zzz.net
+    dns:
+    - 10.64.161.68
+    - 10.64.161.69
+    gateway: 10.64.152.33
+    range: 10.64.152.32/27
+    reserved:
+    - 10.64.152.33-10.64.152.37
+    static:
+    - 10.64.152.38
+    - 10.64.152.39
+#}}}
+
+#{{{ nnn-sbx-iso-st
+- name: sbx-iso-st
+  type: manual
+  subnets:
+  - azs:
+    - z1
+    - z2
+    - dual
+    cloud_properties:
+      name: nnn-sbx-iso-st.nnn1.osl.zzz.net
+    dns:
+    - 10.64.161.68
+    - 10.64.161.69
+    gateway: 10.64.152.161
+    range: 10.64.152.160/27
+    reserved:
+    - 10.64.152.161-10.64.152.164
+    static:
+    - 10.64.152.165
+    - 10.64.152.166
+#}}}
+
+vm_extensions:
+- name: single_site_disks
+  cloud_properties:
+    datastores: *single-mgmt-ds
+- name: dual_site_disks
+  cloud_properties:
+    datastores: *dual-mgmt-ds
+- name: cf-router-network-properties
+- name: cf-tcp-router-network-properties
+- name: diego-ssh-proxy-network-properties
+- name: 50GB_ephemeral_disk
+  cloud_properties:
+    disk: 51200
+- name: 100GB_ephemeral_disk
+  cloud_properties:
+    disk: 102400
+
+vm_types:
+#{{{ Nano
+- name: nano
+  cloud_properties:
+    cpu: 1
+    ram: 512
+    disk: 8192
+#}}}
+
+#{{{ Micro Series
+- name: micro
+  cloud_properties:
+    cpu: 1
+    ram: 1024
+    disk: 8192
+- name: micro.cpu
+  cloud_properties:
+    cpu: 2
+    ram: 1024
+    disk: 8192
+- name: micro.mem
+  cloud_properties:
+    cpu: 1
+    ram: 2048
+    disk: 8192
+- name: micro.disk
+  cloud_properties:
+    cpu: 1
+    ram: 1024
+    disk: 16384
+- name: micro.xldisk
+  cloud_properties:
+    cpu: 1
+    ram: 1024
+    disk: 32768
+#}}}
+
+#{{{ Small Series
+- name: small
+  cloud_properties:
+    cpu: 2
+    ram: 2048
+    disk: 8192
+- name: small.cpu
+  cloud_properties:
+    cpu: 4
+    ram: 2048
+    disk: 8192
+- name: small.mem
+  cloud_properties:
+    cpu: 2
+    ram: 4096
+    disk: 8192
+- name: small.disk
+  cloud_properties:
+    cpu: 2
+    ram: 2048
+    disk: 16384
+- name: small.xldisk
+  cloud_properties:
+    cpu: 2
+    disk: 32768
+    ram: 2048
+#}}}
+
+#{{{ Medium Series
+- name: medium
+  cloud_properties:
+    cpu: 4
+    ram: 4096
+    disk: 8192
+- name: medium.cpu
+  cloud_properties:
+    cpu: 6
+    ram: 4096
+    disk: 8192
+- name: medium.mem
+  cloud_properties:
+    cpu: 4
+    ram: 8192
+    disk: 8192
+- name: medium.disk
+  cloud_properties:
+    cpu: 4
+    ram: 4096
+    disk: 32768
+- name: medium.xldisk
+  cloud_properties:
+    cpu: 4
+    ram: 4096
+    disk: 65536
+#}}}
+
+#{{{ Large Series
+- name: large
+  cloud_properties:
+    cpu: 6
+    ram: 8192
+    disk: 16384
+- name: large.compute
+  cloud_properties:
+    cpu: 6
+    ram: 8192
+    disk: 8192
+- name: large.cpu
+  cloud_properties:
+    cpu: 8
+    ram: 8192
+    disk: 16384
+- name: large.mem
+  cloud_properties:
+    cpu: 6
+    ram: 16384
+    disk: 16384
+- name: large.disk
+  cloud_properties:
+    cpu: 6
+    ram: 8192
+    disk: 65536
+- name: large.xldisk
+  cloud_properties:
+    cpu: 6
+    ram: 8192
+    disk: 131072
+#}}}
+
+#{{{ X-Large Series
+- name: xlarge
+  cloud_properties:
+    cpu: 8
+    ram: 16384
+    disk: 32768
+- name: xlarge.compute
+  cloud_properties:
+    cpu: 8
+    ram: 16384
+    disk: 16384
+- name: xlarge.cpu
+  cloud_properties:
+    cpu: 12
+    ram: 8192
+    disk: 32768
+- name: xlarge.mem
+  cloud_properties:
+    cpu: 8
+    ram: 32768
+    disk: 32768
+- name: xlarge.disk
+  cloud_properties:
+    cpu: 6
+    ram: 16384
+    disk: 131072
+- name: xlarge.xldisk
+  cloud_properties:
+    cpu: 6
+    ram: 16384
+    disk: 262144
+#}}}
+
+#{{{ 2X-Large Series
+- name: 2xlarge
+  cloud_properties:
+    cpu: 12
+    ram: 32768
+    disk: 65536
+- name: 2xlarge.compute
+  cloud_properties:
+    cpu: 12
+    ram: 32768
+    disk: 32798
+- name: 2xlarge.cpu
+  cloud_properties:
+    cpu: 16
+    ram: 32768
+    disk: 65536
+- name: 2xlarge.mem
+  cloud_properties:
+    cpu: 12
+    ram: 65536
+    disk: 65536
+- name: 2xlarge.disk
+  cloud_properties:
+    cpu: 12
+    ram: 32768
+    disk: 262144
+- name: 2xlarge.xldisk
+  cloud_properties:
+    cpu: 12
+    ram: 32768
+    disk: 524288
+#}}}
+
+
+# vim: foldmethod=marker
