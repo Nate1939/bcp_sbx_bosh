@@ -10,13 +10,13 @@ set -euo pipefail
 # Set our current working directory to the root of the BcP repo
 #
 scriptAbsolutePath="$(dirname "$(readlink -f "$BASH_SOURCE")")"
-cd "$scriptAbsolutePath/../../"
+cd "$scriptAbsolutePath"
 
 ##
 # BcP Setup
 # Validates the current setup and guides the user if deviations are found
 #
-. ".scripts/setup.sh"
+. "bcp/.scripts/setup.sh"
 
 ##
 # !! DEPLOYMENT METADATA !!
@@ -48,60 +48,57 @@ check_deployment_and_selected_director
 ##
 # BOSH Deployment Deletion Definition
 #
-bosh -e "$BcP_SELECTED_DIRECTOR" delete-env "clones/bosh-deployment/bosh.yml" \
-    --state="deployments/$DEPLOYMENT_NAME/state.json" \
-    --vars-store="deployments/$DEPLOYMENT_NAME/creds.yml" \
+bosh -e "$BcP_SELECTED_DIRECTOR" delete-env "bcp/clones/bosh-deployment/bosh.yml" \
+    --state="state.json" \
+    --vars-store="creds.yml" \
     -v director_name="$DEPLOYMENT_NAME" \
-    -v internal_ip="10.64.159.4" \
-    -v internal_gw="10.64.159.1" \
-    -v internal_cidr="10.64.159.0/26" \
-    -o "clones/bosh-deployment/vsphere/cpi.yml" \
-        -v network_name="nnn-BcP-core-sz.nnn1.osl.zzz.net" \
-        -v vcenter_dc="CAP-ppp" \
-        -v vcenter_cluster="nnn-Dual-OSL" \
-        -v vcenter_ds="^nnn-san-std-dual-.*$" \
-        -v vcenter_ip="10.76.38.4" \
-        -v vcenter_user="$(vault kv get -field=iaas-vcenter-user platform/credentials)" \
-        -v vcenter_password="$(vault kv get -field=iaas-vcenter-password platform/credentials)" \
+    -v internal_ip="172.16.174.180" \
+    -v internal_gw="172.16.174.1" \
+    -v internal_cidr="172.16.174.0/24" \
+    -o "bcp/clones/bosh-deployment/vsphere/cpi.yml" \
+        -v network_name="Puzzel_DS/VMNet 172.16.174.0" \
+        -v vcenter_dc="DC" \
+        -v vcenter_cluster="QA" \
+        -v vcenter_ds="q1vmfs.+FC" \
+        -v vcenter_ip="172.16.174.158" \
+        -v vcenter_user="$VCENTER_USER" \
+        -v vcenter_password="$VCENTER_PASSWORD" \
         -v vcenter_templates="$DEPLOYMENT_NAME-templates" \
         -v vcenter_vms="$DEPLOYMENT_NAME-vms" \
         -v vcenter_disks="$DEPLOYMENT_NAME-disks" \
-    -o "clones/bosh-deployment/misc/ntp.yml" \
-        -v internal_ntp='["nnn-co-ad1.xxx.yz", "nnn-co-ad2.xxx.yz"]' \
-    -o "clones/bosh-deployment/misc/proxy.yml" \
-        -v http_proxy="http://proxy.xxx.yz:8080" \
-        -v https_proxy="http://proxy.xxx.yz:8080" \
-        -v no_proxy="localhost,bosh,xxx.yz,zzz.net,.0,.1,.2,.3,.4,.5,.6,.7,.8,.9,.10,.11,.12,.13,.14,.15,.16,.17,.18,.19,.20,.21,.22,.23,.24,.25,.26,.27,.28,.29,.30,.31,.32,.33,.34,.35,.36,.37,.38,.39,.40,.41,.42,.43,.44,.45,.46,.47,.48,.49,.50,.51,.52,.53,.54,.55,.56,.57,.58,.59,.60,.61,.62,.63,.64,.65,.66,.67,.68,.69,.70,.71,.72,.73,.74,.75,.76,.77,.78,.79,.80,.81,.82,.83,.84,.85,.86,.87,.88,.89,.90,.91,.92,.93,.94,.95,.96,.97,.98,.99,.100,.101,.102,.103,.104,.105,.106,.107,.108,.109,.110,.111,.112,.113,.114,.115,.116,.117,.118,.119,.120,.121,.122,.123,.124,.125,.126,.127,.128,.129,.130,.131,.132,.133,.134,.135,.136,.137,.138,.139,.140,.141,.142,.143,.144,.145,.146,.147,.148,.149,.150,.151,.152,.153,.154,.155,.156,.157,.158,.159,.160,.161,.162,.163,.164,.165,.166,.167,.168,.169,.170,.171,.172,.173,.174,.175,.176,.177,.178,.179,.180,.181,.182,.183,.184,.185,.186,.187,.188,.189,.190,.191,.192,.193,.194,.195,.196,.197,.198,.199,.200,.201,.202,.203,.204,.205,.206,.207,.208,.209,.210,.211,.212,.213,.214,.215,.216,.217,.218,.219,.220,.221,.222,.223,.224,.225,.226,.227,.228,.229,.230,.231,.232,.233,.234,.235,.236,.237,.238,.239,.240,.241,.242,.243,.244,.245,.246,.247,.248,.249,.250,.251,.252,.253,.254,.255" \
-    -o "common-ops/remove-job-proxy-config.yml" \
-        -v proxy_config_file_paths="/var/vcap/jobs/health_monitor/config/bpm.yml" \
-    -o "clones/bosh-deployment/uaa.yml" \
-    -o "clones/bosh-deployment/credhub.yml" \
-    -o "clones/bosh-deployment/jumpbox-user.yml" \
-    -o "clones/bosh-deployment/misc/trusted-certs.yml" \
-        --var-file trusted_ca_cert="blobs/xxx-yyy-ca-certs.pem" \
-    -o "common-ops/add-trusted-ca-certs-to-director-vm.yml" \
-        --var-file director_vm_trusted_ca_certs="blobs/xxx-yyy-ca-certs.pem" \
-    -o "common-ops/use-xxx-dns.yml" \
-    -o "common-ops/remove-dev-tools-from-vms.yml" \
-    -o "common-ops/change-deployment-name.yml" \
+    -o "bcp/clones/bosh-deployment/misc/ntp.yml" \
+        -v internal_ntp='["q1dc01.qa.local", "q1dc02.qa.local"]' \
+    -o ops/add-azure-cpi.yml \
+    -o "bcp/clones/bosh-deployment/uaa.yml" \
+    -o "bcp/clones/bosh-deployment/credhub.yml" \
+    -o "bcp/clones/bosh-deployment/jumpbox-user.yml" \
+    -o "bcp/clones/bosh-deployment/misc/trusted-certs.yml" \
+        --var-file trusted_ca_cert="bcp/blobs/puzzel-qa-ca-certs.pem" \
+    -o "bcp/clones/bosh-deployment/misc/dns.yml" \
+        -v internal_dns='["172.16.140.18", "172.16.140.20"]' \
+    -o "bcp/common-ops/remove-dev-tools-from-vms.yml" \
+    -o "bcp/common-ops/change-deployment-name.yml" \
         -v deployment_name="$DEPLOYMENT_NAME" \
-    -o "common-ops/bosh-uaa-use-xxx-ldap.yml" \
-        -v ldap_bind_dn="$(vault kv get -field=ldap-${DEPLOYMENT_NAME}-bind-dn platform/credentials)" \
-        -v ldap_bind_password="$(vault kv get -field=ldap-${DEPLOYMENT_NAME}-bind-password platform/credentials)" \
-    -o "deployments/BcP-bosh/ops/bosh-uaa-external-group-mappings.yml"
+    -o "bcp/common-ops/bosh-uaa-use-puzzel-ldap.yml" \
+        -v ldap_server_urls="ldap://q1dc01.qa.local:389 ldap://q1dc01.qa.local:389" \
+        -v ldap_bind_dn="$LDAP_BIND_DN" \
+        -v ldap_bind_password="$LDAP_BIND_PASSWORD" \
+        -v ldap_search_base="OU=QALOCAL,DC=qa,DC=local" \
+        -v ldap_group_search_base="OU=Groups,OU=QALOCAL,DC=qa,DC=local" \
+    -o "ops/bosh-uaa-external-group-mappings.yml"
 
 ##
 # Post-deployment activities
 #
 if [[ $? -eq 0 ]]; then
 
-    # Delete 'creds.yml' and 'state.json' files from the external stores
-    sync_creds_file_to_vault "$DEPLOYMENT_NAME" "delete"
-    sync_state_file_to_bitbucket "$DEPLOYMENT_NAME" "delete"
+    # # Delete 'creds.yml' and 'state.json' files from the external stores
+    # sync_creds_file_to_vault "$DEPLOYMENT_NAME" "delete"
+    # sync_state_file_to_bitbucket "$DEPLOYMENT_NAME" "delete"
 
     # Clean-up any remaining files
-    rm "deployments/$DEPLOYMENT_NAME/creds.yml" 2>/dev/null || true
-    rm "deployments/$DEPLOYMENT_NAME/state.json" 2>/dev/null || true
+    rm "creds.yml" 2>/dev/null || true
+    rm "state.json" 2>/dev/null || true
 fi
 
 ##

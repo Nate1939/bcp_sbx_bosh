@@ -10,7 +10,7 @@ set -euo pipefail
 # Set our current working directory to the root of the BcP repo
 #
 scriptAbsolutePath="$(dirname "$(readlink -f "$BASH_SOURCE")")"
-#cd "$scriptAbsolutePath/../../"
+cd "$scriptAbsolutePath"
 #pwd
 
 ##
@@ -49,8 +49,8 @@ check_if_target_director_is_initialized "$DEPLOYMENT_DIRECTOR" "true"
 #using user input until az cli communication with azure key vault is in place. try with nathaniel.tadesse@qa.local in user
 read -rsp "Enter the username for vcenter': " VCENTER_USER
 read -rsp "Enter the password for vcenter': " VCENTER_PASSWORD
-LDAP_BIND_DN = "VCENTER_USER"
-LDAP_BIND_PASSWORD = "VCENTER_PASSWORD"
+LDAP_BIND_DN="$VCENTER_USER"
+LDAP_BIND_PASSWORD="$VCENTER_PASSWORD"
 ##
 # BOSH Deployment Definition
 #
@@ -81,15 +81,12 @@ bosh create-env "bcp/clones/bosh-deployment/bosh.yml" \
     -o "bcp/clones/bosh-deployment/jumpbox-user.yml" \
     -o "bcp/clones/bosh-deployment/misc/trusted-certs.yml" \
         --var-file trusted_ca_cert="bcp/blobs/puzzel-qa-ca-certs.pem" \
-    # -o "bcp/common-ops/add-trusted-ca-certs-to-director-vm.yml" \
-    #     --var-file director_vm_trusted_ca_certs="bcp/blobs/puzzel-qa-ca-certs.pem" \ er vel overflødig når vi har -o rett over
-    -o clones/bosh-deployment/misc/dns.yml \
+    -o "bcp/clones/bosh-deployment/misc/dns.yml" \
         -v internal_dns='["172.16.140.18", "172.16.140.20"]' \
-    #-o "common-ops/use-puzzel-dns.yml" \ ikke nødvnedig når vi har -o rett over, som er kopiert fra playground bosh?
     -o "bcp/common-ops/remove-dev-tools-from-vms.yml" \
     -o "bcp/common-ops/change-deployment-name.yml" \
         -v deployment_name="$DEPLOYMENT_NAME" \
-    -o "bcp/common-ops/bosh-uaa-use-xxx-ldap.yml" \
+    -o "bcp/common-ops/bosh-uaa-use-puzzel-ldap.yml" \
         -v ldap_server_urls="ldap://q1dc01.qa.local:389 ldap://q1dc01.qa.local:389" \
         -v ldap_bind_dn="$LDAP_BIND_DN" \
         -v ldap_bind_password="$LDAP_BIND_PASSWORD" \
@@ -103,8 +100,8 @@ bosh create-env "bcp/clones/bosh-deployment/bosh.yml" \
 if [[ $? -eq 0 ]]; then
 
     # Set 'creds.yml' and 'state.json' file permissions
-    chmod 600 "deployments/$DEPLOYMENT_NAME/creds.yml"
-    chmod 600 "deployments/$DEPLOYMENT_NAME/state.json"
+    chmod 600 "creds.yml"
+    chmod 600 "state.json"
 
     # # Sync 'creds.yml' and 'state.json' files to the external stores
     # sync_creds_file_to_vault "$DEPLOYMENT_NAME" "sync"
