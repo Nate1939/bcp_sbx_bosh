@@ -93,8 +93,8 @@ if [[ $? -eq 0 ]]; then
     printf "}"                                      >> "deployments/$DEPLOYMENT_NAME/state.json"
 
     # Sync 'creds.yml' and 'state.json' files to the external stores
-    sync_creds_file_to_vault "$DEPLOYMENT_NAME" "sync"
-    sync_state_file_to_bitbucket "$DEPLOYMENT_NAME" "sync"
+    sync_creds_file_to_blob_store "$DEPLOYMENT_NAME" "sync"
+    sync_state_file_to_git "$DEPLOYMENT_NAME" "sync"
 
     # Instruct the user to finish the 'sbx-bosh' setup by following these stems
     bold_green_msg "The Sandbox (Sbx) BOSH Director is now ready!\n"

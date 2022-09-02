@@ -93,8 +93,8 @@ bosh -e "$BcP_SELECTED_DIRECTOR" delete-env "bcp/clones/bosh-deployment/bosh.yml
 if [[ $? -eq 0 ]]; then
 
     # # Delete 'creds.yml' and 'state.json' files from the external stores
-    # sync_creds_file_to_vault "$DEPLOYMENT_NAME" "delete"
-    # sync_state_file_to_bitbucket "$DEPLOYMENT_NAME" "delete"
+    # sync_creds_file_to_blob_store "$DEPLOYMENT_NAME" "delete"
+    # sync_state_file_to_git "$DEPLOYMENT_NAME" "delete"
 
     # Clean-up any remaining files
     rm "creds.yml" 2>/dev/null || true

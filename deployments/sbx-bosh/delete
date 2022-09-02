@@ -55,8 +55,8 @@ bosh -e "$TARGET_DIRECTOR" -d "$DEPLOYMENT_NAME" delete-deployment
 #
 if [[ $? -eq 0 ]]; then
 
-    # Delete the 'state.json' file from Bitbucket
-    sync_state_file_to_bitbucket "$DEPLOYMENT_NAME" "delete"
+    # Delete the 'state.json' file from git
+    sync_state_file_to_git "$DEPLOYMENT_NAME" "delete"
 
     # Clean-up any remaining files
     rm "deployments/$DEPLOYMENT_NAME/state.json" 2>/dev/null || true
