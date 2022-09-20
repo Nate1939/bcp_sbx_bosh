@@ -41,7 +41,7 @@ declare -a dependencies=(
 load_dependencies "${dependencies[@]}"
 
 ##
-# Check if the Director is already initialized
+# Check if the Director is already initialized.
 #
 check_if_target_director_is_initialized "$DEPLOYMENT_DIRECTOR" "true"
 
