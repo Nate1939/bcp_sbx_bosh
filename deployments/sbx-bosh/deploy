@@ -100,7 +100,7 @@ if [[ $? -eq 0 ]]; then
     bold_green_msg "The Sandbox (Sbx) BOSH Director is now ready!\n"
     bold_msg "Please perform the following stems to finish the setup:\n"
     normal_msg "1) Select the new Sandbox (Sbx) BOSH Director"
-    bold_msg "./scripts/select-director.sh sbx-bosh\n"
+    bold_msg "./bcp/select-director.sh sbx-bosh\n"
     normal_msg "2) Upload the Cloud Config"
     bold_msg "bosh update-cloud-config cloud-config/sbx-bosh/cloud-config.yml\n"
     normal_msg "3) Update the runtime config to enable BOSH DNS"

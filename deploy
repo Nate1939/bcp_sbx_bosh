@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# executable: deployments/BcP-bosh/deploy
+# executable: deploy
 #
 # Deploy the BcP BOSH Director
 #
@@ -11,7 +11,6 @@ set -euo pipefail
 #
 scriptAbsolutePath="$(dirname "$(readlink -f "$BASH_SOURCE")")"
 cd "$scriptAbsolutePath"
-#pwd
 
 ##
 # BcP Setup
@@ -98,9 +97,9 @@ if [[ $? -eq 0 ]]; then
     chmod 600 "creds.yml"
     chmod 600 "state.json"
 
-    # # Sync 'creds.yml' and 'state.json' files to the external stores
-    # sync_creds_file_to_blob_store "$DEPLOYMENT_NAME" "sync"
-    # sync_state_file_to_git "$DEPLOYMENT_NAME" "sync"
+    # Sync 'creds.yml' and 'state.json' files to the external stores
+    sync_creds_file_to_blob_store "$DEPLOYMENT_NAME" "sync"
+    sync_state_file_to_git "$DEPLOYMENT_NAME" "sync"
 
     # Connect to the deployed BOSH Director
     connect_to_bosh $DEPLOYMENT_NAME
