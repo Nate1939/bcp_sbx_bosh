@@ -7,13 +7,13 @@
 set -euo pipefail
 
 ##
-# Set our current working directory to the root of the BcP repo
+# Set our current working directory to the root of the bcp repo
 #
 scriptAbsolutePath="$(dirname "$(readlink -f "$BASH_SOURCE")")"
 cd "$scriptAbsolutePath"
 
 ##
-# BcP Setup
+# bcp Setup
 # Validates the current setup and guides the user if deviations are found
 #
 . "bcp/.scripts/setup.sh"
@@ -22,8 +22,8 @@ cd "$scriptAbsolutePath"
 # !! DEPLOYMENT METADATA !!
 #    Must be filled out!
 #
-DEPLOYMENT_NAME="BcP-bosh"
-DEPLOYMENT_DIRECTOR="BcP-bosh"
+DEPLOYMENT_NAME="bcp-sbx-bosh"
+DEPLOYMENT_DIRECTOR="bcp-sbx-bosh"
 
 echo_deployment_metadata
 
@@ -49,7 +49,7 @@ check_deployment_and_selected_director
 # BOSH Deployment Deletion Definition
 #
 
-bosh -e "$BcP_SELECTED_DIRECTOR" delete-env "bcp/clones/bosh-deployment/bosh.yml" \
+bosh -e "$BCP_SELECTED_DIRECTOR" delete-env "bcp/clones/bosh-deployment/bosh.yml" \
     --state="state.json" \
     --vars-store="creds.yml" \
     -v director_name="$DEPLOYMENT_NAME" \

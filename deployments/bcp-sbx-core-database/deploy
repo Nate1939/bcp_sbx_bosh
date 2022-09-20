@@ -1,19 +1,19 @@
 #!/bin/bash
 #
-# executable: deployments/BcP-core/deploy
+# executable: deployments/bcp-sbx-core-database/deploy
 #
-# Deploy the BcP Core Services
+# Deploy the bcp Core Services
 #
 set -euo pipefail
 
 ##
-# Set our current working directory to the root of the BcP repo
+# Set our current working directory to the root of the bcp repo
 #
 scriptAbsolutePath="$(dirname "$(readlink -f "$BASH_SOURCE")")"
 cd "$scriptAbsolutePath/../../"
 
 ##
-# BcP Setup
+# bcp Setup
 # Validates the current setup and guides the user if deviations are found
 #
 . ".scripts/setup.sh"
@@ -22,8 +22,8 @@ cd "$scriptAbsolutePath/../../"
 # !! DEPLOYMENT METADATA !!
 #    Must be filled out!
 #
-DEPLOYMENT_NAME="BcP-core"
-DEPLOYMENT_DIRECTOR="BcP-bosh"
+DEPLOYMENT_NAME="bcp-sbx-core-database"
+DEPLOYMENT_DIRECTOR="bcp-sbx-bosh"
 
 echo_deployment_metadata
 
@@ -44,10 +44,10 @@ load_dependencies ${dependencies[@]+"${dependencies[@]}"}
 check_deployment_and_selected_director
 
 ##
-# BOSH Deployment Definition: BcP Database Service
+# BOSH Deployment Definition: bcp Database Service
 #
 bosh -e "$DEPLOYMENT_DIRECTOR" -d "${DEPLOYMENT_NAME}-database" \
-    deploy --no-redact "deployments/BcP-core/manifests/database.yml"
+    deploy --no-redact "deployments/bcp-sbx-core-database/manifests/database.yml"
 
 ##
 # Post-deployment activities

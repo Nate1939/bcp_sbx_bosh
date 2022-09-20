@@ -2,18 +2,18 @@
 #
 # executable: deploy
 #
-# Deploy the BcP BOSH Director
+# Deploy the bcp BOSH Director
 #
 set -euo pipefail
 
 ##
-# Set our current working directory to the root of the BcP repo
+# Set our current working directory to the root of the bcp repo
 #
 scriptAbsolutePath="$(dirname "$(readlink -f "$BASH_SOURCE")")"
 cd "$scriptAbsolutePath"
 
 ##
-# BcP Setup
+# bcp Setup
 # Validates the current setup and guides the user if deviations are found
 #
 . "bcp/.scripts/setup.sh"
@@ -22,8 +22,8 @@ cd "$scriptAbsolutePath"
 # !! DEPLOYMENT METADATA !!
 #    Must be filled out!
 #
-DEPLOYMENT_NAME="BcP-bosh"
-DEPLOYMENT_DIRECTOR="BcP-bosh"
+DEPLOYMENT_NAME="bcp-sbx-bosh"
+DEPLOYMENT_DIRECTOR="bcp-sbx-bosh"
 
 echo_deployment_metadata
 
@@ -107,8 +107,8 @@ if [[ $? -eq 0 ]]; then
     # # Upload the Cloud Config to be used by all deployments made by this BOSH Director
     # bosh -n update-cloud-config "cloud-config/$DEPLOYMENT_NAME/cloud-config.yml"
 
-    # Ensure we have BOSH DNS available for all deployments made by this BOSH Director
-    bosh -n update-runtime-config "bcp/clones/bosh-deployment/runtime-configs/dns.yml"
+    # # Ensure we have BOSH DNS available for all deployments made by this BOSH Director
+    # bosh -n update-runtime-config "bcp/clones/bosh-deployment/runtime-configs/dns.yml"
 
     # Upload Ubuntu Bionic stemcell
     bosh -n upload-stemcell --sha1 4cf0de2078b94dfdeb01ac6e3af7a32c31df5171 \

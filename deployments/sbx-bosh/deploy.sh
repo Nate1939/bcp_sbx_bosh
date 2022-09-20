@@ -11,7 +11,7 @@ set -euo pipefail
 # See README for more information.
 RED='\e[31m'; RESET='\e[0m';
 if [ ! -d "./scripts" ]; then
-    >&2 printf "\n${RED}You must be in the repository root to execute BcP scripts!\n\n${RESET}"
+    >&2 printf "\n${RED}You must be in the repository root to execute bcp scripts!\n\n${RESET}"
     exit 1
 fi
 
