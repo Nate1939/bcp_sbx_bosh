@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# executable: deployments/bcp-sbx-core-database/deploy
+# executable: deployments/bcp-sbx-core-database/delete
 #
-# Deploy the bcp Core Services
+# Delete the bcp Core Services
 #
 set -euo pipefail
 
@@ -44,10 +44,9 @@ load_dependencies ${dependencies[@]+"${dependencies[@]}"}
 check_deployment_and_selected_director
 
 ##
-# BOSH Deployment Definition: bcp Database Service
-# use -n before -e if you do not wish to require user to accept after it has been listed what will actually be deploy
-bosh -e "$DEPLOYMENT_DIRECTOR" -d "${DEPLOYMENT_NAME}" \
-    deploy --no-redact "deployments/bcp-sbx-core-database/manifests/database.yml"
+# BOSH Deployment Deletion Definition
+#
+bosh -e "$DEPLOYMENT_DIRECTOR" -d "${DEPLOYMENT_NAME}" delete-deployment
 
 ##
 # Post-deployment activities
@@ -63,6 +62,7 @@ fi
 # DEPLOYMENT OPERATION COMPLETED!
 #
 printf "\n\n"
-bold_green_msg_nn "FINISHED DEPLOYING: "
-green_msg "${DEPLOYMENT_NAME}!"
+bold_green_msg_nn "FINISHED "
+bold_red_msg_nn "--DELETING--"
+green_msg ": ${DEPLOYMENT_NAME}!"
 printf "\n\n"
