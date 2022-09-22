@@ -22,7 +22,7 @@ cd "$scriptAbsolutePath/../../"
 # !! DEPLOYMENT METADATA !!
 #    Must be filled out!
 #
-DEPLOYMENT_NAME="bcp-sbx-core-database"
+DEPLOYMENT_NAME="bcp-sbx-core-services"
 DEPLOYMENT_DIRECTOR="bcp-sbx-bosh"
 
 echo_deployment_metadata
