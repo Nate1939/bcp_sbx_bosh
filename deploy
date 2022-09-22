@@ -104,11 +104,11 @@ if [[ $? -eq 0 ]]; then
     # Connect to the deployed BOSH Director
     connect_to_bosh $DEPLOYMENT_NAME
 
-    # # Upload the Cloud Config to be used by all deployments made by this BOSH Director
-    # bosh -n update-cloud-config "cloud-config/$DEPLOYMENT_NAME/cloud-config.yml"
+    # Upload the Cloud Config to be used by all deployments made by this BOSH Director
+    bosh -n update-cloud-config "cloud-config/$DEPLOYMENT_NAME/cloud-config.yml"
 
-    # # Ensure we have BOSH DNS available for all deployments made by this BOSH Director
-    # bosh -n update-runtime-config "bcp/clones/bosh-deployment/runtime-configs/dns.yml"
+    # Ensure we have BOSH DNS available for all deployments made by this BOSH Director
+    bosh -n update-runtime-config "bcp/clones/bosh-deployment/runtime-configs/dns.yml"
 
     # Upload Ubuntu Bionic stemcell
     # bosh -n upload-stemcell --sha1 4cf0de2078b94dfdeb01ac6e3af7a32c31df5171 \

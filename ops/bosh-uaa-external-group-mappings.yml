@@ -2,12 +2,12 @@
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/external_groups?
   value:
     ldap:
-      "CN=DL-BOSH-BCP-sbx-Uaa-Admin,OU=Groups,OU=QALOCAL,DC=qa,DC=local":
+      "CN=DL-BOSH-bcp-sbx-Uaa-Admin,OU=Groups,OU=QALOCAL,DC=qa,DC=local":
         - scim.read
         - scim.write
-      "CN=DL-BOSH-BCP-sbx-Admin,OU=Groups,OU=QALOCAL,DC=qa,DC=local":
+      "CN=DL-BOSH-bcp-sbx-Admin,OU=Groups,OU=QALOCAL,DC=qa,DC=local":
         - bosh.admin
-      "CN=DL-BOSH-BCP-sbx-Credhub-Read,OU=Groups,OU=QALOCAL,DC=qa,DC=local":
+      "CN=DL-BOSH-bcp-sbx-Credhub-Read,OU=Groups,OU=QALOCAL,DC=qa,DC=local":
         - credhub.read
-      "CN=DL-BOSH-BCP-sbx-Credhub-Write,OU=Groups,OU=QALOCAL,DC=qa,DC=local":
+      "CN=DL-BOSH-bcp-sbx-Credhub-Write,OU=Groups,OU=QALOCAL,DC=qa,DC=local":
         - credhub.write
