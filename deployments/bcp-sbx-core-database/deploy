@@ -16,7 +16,7 @@ cd "$scriptAbsolutePath/../../"
 # bcp Setup
 # Validates the current setup and guides the user if deviations are found
 #
-. ".scripts/setup.sh"
+. "bcp/.scripts/setup.sh"
 
 ##
 # !! DEPLOYMENT METADATA !!
@@ -46,7 +46,7 @@ check_deployment_and_selected_director
 ##
 # BOSH Deployment Definition: bcp Database Service
 #
-bosh -e "$DEPLOYMENT_DIRECTOR" -d "${DEPLOYMENT_NAME}-database" \
+bosh -e "$DEPLOYMENT_DIRECTOR" -d "${DEPLOYMENT_NAME}" \
     deploy --no-redact "deployments/bcp-sbx-core-database/manifests/database.yml"
 
 ##

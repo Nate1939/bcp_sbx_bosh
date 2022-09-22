@@ -29,23 +29,11 @@ vm_types:
       cpu: 2
       ram: 1024
       disk: 10240
-      instance_type: Standard_A2_v2
-      root_disk:
-        size: 5120
-      ephemeral_disk:
-        use_root_disk: false
-        size: 30720
   - name: small.ram
     cloud_properties:
       cpu: 1
       ram: 2048
       disk: 10240
-      instance_type: Standard_A1_v2
-      root_disk:
-        size: 5120
-      ephemeral_disk:
-        use_root_disk: false
-        size: 30720
   - name: small.disk
     cloud_properties:
       cpu: 1
@@ -56,23 +44,11 @@ vm_types:
       cpu: 2
       ram: 2048
       disk: 20480
-      instance_type: Standard_D2s_v5
-      root_disk:
-        size: 5120
-      ephemeral_disk:
-        use_root_disk: false
-        size: 30720
   - name: medium.cpu
     cloud_properties:
       cpu: 4
       ram: 2048
       disk: 20480
-      instance_type: Standard_D4s_v5
-      root_disk:
-        size: 5120
-      ephemeral_disk:
-        use_root_disk: false
-        size: 30720
   - name: medium.ram
     cloud_properties:
       cpu: 2
@@ -88,23 +64,11 @@ vm_types:
       cpu: 4
       ram: 4096
       disk: 40960
-      instance_type: Standard_D4s_v5
-      root_disk:
-        size: 5120
-      ephemeral_disk:
-        use_root_disk: false
-        size: 30720
   - name: large.cpu
     cloud_properties:
       cpu: 6
       ram: 4096
       disk: 40960
-      instance_type: Standard_D8s_v5
-      root_disk:
-        size: 5120
-      ephemeral_disk:
-        use_root_disk: false
-        size: 30720
   - name: large.ram
     cloud_properties:
       cpu: 4
