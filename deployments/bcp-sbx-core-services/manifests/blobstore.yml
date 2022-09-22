@@ -1,4 +1,4 @@
-name: BcP-core-blobstore
+name: bcp-sbx-core-services
 
 releases:
 # - name: "minio"
@@ -63,13 +63,13 @@ variables:
   type: certificate
   options:
     is_ca: true
-    common_name: BcP Core Blobstore CA
+    common_name: BCP Core Blobstore CA
 
 - name: blobstore_cert
   type: certificate
   options:
     ca: blobstore_ca
-    common_name: BcP Core Blobstore
+    common_name: BCP Core Blobstore
   consumes:
     alternative_name:
       from: blobstore-address
