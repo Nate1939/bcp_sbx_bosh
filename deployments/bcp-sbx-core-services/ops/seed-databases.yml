@@ -1,0 +1,27 @@
+---
+- type: replace
+  path: /instance_groups/name=mysql/jobs/name=pxc-mysql/properties/seeded_databases?/-
+  value:
+    name: uaa-svc-db
+    username: uaa-svc-db
+    password: ((uaa-svc-db))
+
+- type: replace
+  path: /variables?/-
+  value:
+    name: uaa-svc-db
+    type: password
+
+- type: replace
+  path: /instance_groups/name=mysql/jobs/name=pxc-mysql/properties/seeded_databases?/-
+  value:
+    name: credhub-svc-db
+    username: credhub-sbx-db-username
+    password: ((credhub-sbx-db-password))
+
+- type: replace
+  path: /variables?/-
+  value:
+    name: credhub-sbx-db-password
+    type: password
+

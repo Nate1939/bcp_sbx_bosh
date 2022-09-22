@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# executable: deployments/bcp-sbx-core-database/deploy
+# executable: deployments/bcp-sbx-core-services/deploy
 #
 # Deploy the bcp Core Services
 #
@@ -22,7 +22,7 @@ cd "$scriptAbsolutePath/../../"
 # !! DEPLOYMENT METADATA !!
 #    Must be filled out!
 #
-DEPLOYMENT_NAME="bcp-sbx-core-database"
+DEPLOYMENT_NAME="bcp-sbx-core-services"
 DEPLOYMENT_DIRECTOR="bcp-sbx-bosh"
 
 echo_deployment_metadata
@@ -44,10 +44,10 @@ load_dependencies ${dependencies[@]+"${dependencies[@]}"}
 check_deployment_and_selected_director
 
 ##
-# BOSH Deployment Definition: bcp Database Service
-# use -n before -e if you do not wish to require user to accept after it has been listed what will actually be deploy
+# BOSH Deployment Definition: bcp core services - blobstore
+# use -n before -e if you do not wish to require user acceptance after it has been listed what will actually be deployed
 bosh -e "$DEPLOYMENT_DIRECTOR" -d "${DEPLOYMENT_NAME}" \
-    deploy --no-redact "deployments/$DEPLOYMENT_NAME/manifests/database.yml"
+    deploy --no-redact "deployments/$DEPLOYMENT_NAME/manifests/blobstore.yml"
 
 ##
 # Post-deployment activities
