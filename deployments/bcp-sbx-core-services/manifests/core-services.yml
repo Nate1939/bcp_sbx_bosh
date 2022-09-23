@@ -26,7 +26,6 @@ features:
 
 instance_groups:
 - name: core-services
-  # name: minio
   instances: 4
   azs: [vsphere]
   networks:
@@ -120,23 +119,40 @@ instance_groups:
             password: ((admin_password))
         sslCertificate: ((uaa_ssl.certificate))
         sslPrivateKey: ((uaa_ssl.private_key))
-        url: https://((internal_ip)):8443
+        #url: https://((internal_ip)):8443
+        url: "https://q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
         zones:
           internal:
             hostnames:
-            - ((internal_ip))
+            - "q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh"
       uaadb:
-        address: 127.0.0.1
+        address: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
         databases:
         - name: uaa
           tag: uaa
-        db_scheme: postgresql
-        port: 5432
+        db_scheme: mysql
+        port: 3306
         roles:
-        - name: postgres
-          password: ((postgres_password))
+        - name: uaa-db-user
+          password: ((/bcp-sbx-bosh/bcp-sbx-core-database/uaa-db-pwd))
           tag: admin
         tls: disabled
+
+  - name: bbr-uaadb
+    release: uaa
+    properties:
+      release_level_backup: true
+      uaadb:
+        address: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
+        databases:
+        - name: uaa
+          tag: uaa
+        db_scheme: mysql
+        port: 3306
+        roles:
+        - name: uaa-db-user
+          password: ((/bcp-sbx-bosh/bcp-sbx-core-database/uaa-db-pwd))
+          tag: admin
 
 update:
   canaries: 1
@@ -151,7 +167,7 @@ variables:
 - name: minio_secretkey
   type: password
 
-- name: blobstore_ca
+- name: core_services_ca
   type: certificate
   options:
     is_ca: true
@@ -160,9 +176,35 @@ variables:
 - name: blobstore_cert
   type: certificate
   options:
-    ca: blobstore_ca
+    ca: core_services_ca
     common_name: BCP Core Blobstore
   consumes:
     alternative_name:
       from: blobstore-address
       properties: { wildcard: true }
+
+# Variables for UAA
+- name: uaa_jwt_signing_key
+  type: rsa
+
+- name: uaa_admin_client_secret
+  type: password
+
+- name: uaa_encryption_key_1
+  type: password
+
+- name: uaa_ssl
+  options:
+    alternative_names:
+    - q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh
+    ca: core_services_ca
+    common_name: q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh
+  type: certificate
+
+- name: uaa_service_provider_ssl
+  options:
+    alternative_names:
+    - q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh
+    ca: core_services_ca
+    common_name: q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh
+  type: certificate

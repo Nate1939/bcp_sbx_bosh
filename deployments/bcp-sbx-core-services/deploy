@@ -47,8 +47,7 @@ check_deployment_and_selected_director
 # BOSH Deployment Definition: bcp core services - blobstore
 # use -n before -e if you do not wish to require user acceptance after it has been listed what will actually be deployed
 bosh -e "$DEPLOYMENT_DIRECTOR" -d "${DEPLOYMENT_NAME}" \
-    deploy --no-redact "deployments/$DEPLOYMENT_NAME/manifests/core-services.yml" \
-    -v internal_ip="127.0.0.1"
+    deploy --no-redact "deployments/$DEPLOYMENT_NAME/manifests/core-services.yml"
 
 ##
 # Post-deployment activities
