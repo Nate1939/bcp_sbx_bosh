@@ -1,0 +1,22 @@
+- type: replace
+  path: /instance_groups/name=core-services/jobs/name=uaa/properties/uaa/ldap?
+  value:
+    enabled: true
+    url: ((ldap_server_urls))
+    userDN: ((ldap_bind_dn))
+    userPassword: ((ldap_bind_password))
+    searchBase: ((ldap_search_base))
+    searchFilter: sAMAccountName={0}
+    groups:
+      profile_type: groups-map-to-scopes
+      searchBase: ((ldap_group_search_base))
+      maxSearchDepth: 10
+    attributeMappings:
+      given_name: givenName
+      family_name: sn
+      phone_number: telephoneNumber
+
+- type: replace
+  path: /instance_groups/name=core-services/jobs/name=uaa/properties/login/prompt?/username
+  value:
+    text: Username

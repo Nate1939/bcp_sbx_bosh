@@ -120,11 +120,13 @@ instance_groups:
         sslCertificate: ((uaa_ssl.certificate))
         sslPrivateKey: ((uaa_ssl.private_key))
         #url: https://((internal_ip)):8443
-        url: "https://q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
+        #url: "https://q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
+        url: https://((internal_ip)):8443
         zones:
           internal:
             hostnames:
-            - "q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh"
+            - ((internal_ip))
+            #- "q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh"
       uaadb:
         address: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
         databases:
@@ -195,7 +197,7 @@ variables:
 
 - name: admin_password
   type: password
-  
+
 - name: hm_password
   type: password
 
