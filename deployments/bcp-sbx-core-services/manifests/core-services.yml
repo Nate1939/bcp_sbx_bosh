@@ -193,6 +193,15 @@ variables:
 - name: uaa_encryption_key_1
   type: password
 
+- name: admin_password
+  type: password
+  
+- name: hm_password
+  type: password
+
+- name: nats_sync_password
+  type: password
+
 - name: uaa_ssl
   options:
     alternative_names:
