@@ -1,0 +1,71 @@
+name: bcp-sbx-core-services
+
+releases:
+- name: "minio"
+  version: "2022-09-17T00-09-45Z"
+  url: "https://bosh.io/d/github.com/minio/minio-boshrelease?v=2022-09-17T00-09-45Z"
+  sha1: "98721a8523982b5f52c812ff60f079bd07a09f85"
+
+stemcells:
+- alias: default
+  os: ubuntu-bionic
+  version: latest
+
+features:
+  use_dns_addresses: true
+  randomize_az_placement: true
+
+instance_groups:
+- name: minio
+  instances: 4
+  azs: [vsphere]
+  networks:
+    - name: vsphere-default
+  vm_type: large
+  stemcell: default
+  persistent_disk: 50000
+  jobs:
+  - name: minio-server
+    release: minio
+    provides:
+      minio-server: { as: blobstore, shared: true }
+      blobstore-address: { as: blobstore-address }
+    custom_provider_definitions:
+    - name: blobstore-address
+      type: address
+    properties:
+      credential:
+        accesskey: ((minio_accesskey))
+        secretkey: ((minio_secretkey))
+      server_cert: ((blobstore_cert.certificate))
+      server_key: ((blobstore_cert.private_key))
+      ca_cert: ((blobstore_cert.ca))
+
+update:
+  canaries: 1
+  canary_watch_time: 10000-600000
+  max_in_flight: 1
+  update_watch_time: 10000-600000
+
+variables:
+- name: minio_accesskey
+  type: password
+
+- name: minio_secretkey
+  type: password
+
+- name: blobstore_ca
+  type: certificate
+  options:
+    is_ca: true
+    common_name: BCP Core Blobstore CA
+
+- name: blobstore_cert
+  type: certificate
+  options:
+    ca: blobstore_ca
+    common_name: BCP Core Blobstore
+  consumes:
+    alternative_name:
+      from: blobstore-address
+      properties: { wildcard: true }
