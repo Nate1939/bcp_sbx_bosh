@@ -47,7 +47,8 @@ check_deployment_and_selected_director
 # BOSH Deployment Definition: bcp Database Service
 # use -n before -e if you do not wish to require user to accept after it has been listed what will actually be deploy
 bosh -e "$DEPLOYMENT_DIRECTOR" -d "${DEPLOYMENT_NAME}" \
-    deploy --no-redact "deployments/$DEPLOYMENT_NAME/manifests/database.yml"
+    deploy --no-redact "deployments/$DEPLOYMENT_NAME/manifests/database.yml" \
+    -o "deployments/$DEPLOYMENT_NAME/ops/seed-databases.yml"
 
 ##
 # Post-deployment activities
