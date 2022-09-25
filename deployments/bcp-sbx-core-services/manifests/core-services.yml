@@ -120,15 +120,15 @@ instance_groups:
         sslCertificate: ((uaa_ssl.certificate))
         sslPrivateKey: ((uaa_ssl.private_key))
         #url: https://((internal_ip)):8443
-        #url: "https://q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
-        url: https://((internal_ip)):8443
+        url: "https://q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
         zones:
           internal:
             hostnames:
-            - ((internal_ip))
-            #- "q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh"
+            # - ((internal_ip))
+            - "q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh"
       uaadb:
         address: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
+        # address: "172.16.174.181"
         databases:
         - name: uaa
           tag: uaa
@@ -146,6 +146,7 @@ instance_groups:
       release_level_backup: true
       uaadb:
         address: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
+        #address: "172.16.174.181"
         databases:
         - name: uaa
           tag: uaa
@@ -207,15 +208,15 @@ variables:
 - name: uaa_ssl
   options:
     alternative_names:
-    - q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh
+    - q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
     ca: core_services_ca
-    common_name: q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh
+    common_name: q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
   type: certificate
 
 - name: uaa_service_provider_ssl
   options:
     alternative_names:
-    - q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh
+    - q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
     ca: core_services_ca
-    common_name: q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh
+    common_name: q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
   type: certificate

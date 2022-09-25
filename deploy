@@ -82,8 +82,8 @@ bosh create-env "bcp/clones/bosh-deployment/bosh.yml" \
         -v deployment_name="$DEPLOYMENT_NAME" \
     -o "bcp/common-ops/bosh-uaa-use-puzzel-ldap.yml" \
         -v ldap_server_urls="ldap://q1dc01.qa.local:389 ldap://q1dc01.qa.local:389" \
-        -v ldap_bind_dn="$(az keyvault secret show --vault-name "bosh-prod-uks-kv" --name "ldap-$DEPLOYMENT_NAME-bind-dn" --query "value" -o tsv)" \
-        -v ldap_bind_password="$(az keyvault secret show --vault-name "bosh-prod-uks-kv" --name "ldap-$DEPLOYMENT_NAME-bind-password" --query "value" -o tsv)" \
+        -v ldap_bind_dn="$(az keyvault secret show --vault-name "bosh-prod-uks-kv" --name "ldap-$DEPLOYMENT_DIRECTOR-bind-dn" --query "value" -o tsv)" \
+        -v ldap_bind_password="$(az keyvault secret show --vault-name "bosh-prod-uks-kv" --name "ldap-$DEPLOYMENT_DIRECTOR-bind-password" --query "value" -o tsv)" \
         -v ldap_search_base="OU=QALOCAL,DC=qa,DC=local" \
         -v ldap_group_search_base="OU=Groups,OU=QALOCAL,DC=qa,DC=local" \
     -o "ops/bosh-uaa-external-group-mappings.yml"
