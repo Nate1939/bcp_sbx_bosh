@@ -9,6 +9,10 @@ releases:
   version: "76.0.0"
   url: "https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=76.0.0"
   sha1: "83bc6c978a2a64e53f8dcfe5838b994091995758"
+- name: "credhub"
+  version: "2.12.9"
+  url: "https://bosh.io/d/github.com/pivotal-cf/credhub-release?v=2.12.9"
+  sha1: "45985800a5cab506c84db53102649a1b36c8f2a0"
 - name: "bpm"
   version: "1.1.19"
   url: "https://bosh.io/d/github.com/cloudfoundry/bpm-release?v=1.1.19"
@@ -105,12 +109,35 @@ instance_groups:
             override: true
             scope: ""
             secret: ((uaa_admin_client_secret))
+          director_to_credhub:
+            access-token-validity: 3600
+            authorities: credhub.read,credhub.write
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: ((uaa_clients_director_to_credhub))
+          credhub_cli:
+            access-token-validity: 60
+            authorities: ""
+            authorized-grant-types: password,refresh_token
+            override: true
+            refresh-token-validity: 1800
+            scope: credhub.read,credhub.write
+            secret: ""
+          credhub-admin:
+            access-token-validity: 3600
+            authorities: credhub.read,credhub.write
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: ((credhub_admin_client_secret))
         jwt:
           policy:
             active_key_id: uaa-jwt-key-1
             keys:
               uaa-jwt-key-1:
                 signingKey: ((uaa_jwt_signing_key.private_key))
+          revocable: true
         scim:
           groups:
             bosh.admin: User has admin access on any Director
@@ -118,10 +145,17 @@ instance_groups:
             bosh.releases.upload: User can upload new releases
             bosh.stemcells.upload: User can upload new stemcells
           users:
-          - groups:
-            - bosh.admin
-            name: admin
+          - name: admin
             password: ((admin_password))
+            groups:
+            - bosh.admin
+          - name: credhub_cli_user
+            password: ((credhub_cli_user_password))
+            groups:
+            - credhub.read
+            - credhub.write
+        ca_certs:
+        - ((/bcp-sbx-bosh/bcp-sbx-core-database/mysql_server_certificate.ca))
         sslCertificate: ((uaa_ssl.certificate))
         sslPrivateKey: ((uaa_ssl.private_key))
         #url: https://((internal_ip)):8443
@@ -131,6 +165,7 @@ instance_groups:
             hostnames:
             # - ((internal_ip))
             - "q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh"
+            - "q-s0.core-services.vsphere-default.bcp-sbx-core-services.bosh"
       uaadb:
         address: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
         # address: "172.16.174.181"
@@ -143,7 +178,7 @@ instance_groups:
         - name: uaa-db-user
           password: ((/bcp-sbx-bosh/bcp-sbx-core-database/uaa-db-pwd))
           tag: admin
-        tls: disabled
+        tls: enabled
 
   - name: bbr-uaadb
     release: uaa
@@ -152,6 +187,7 @@ instance_groups:
       uaadb:
         address: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
         #address: "172.16.174.181"
+        ca_cert: ((/bcp-sbx-bosh/bcp-sbx-core-database/mysql_server_certificate.ca))
         databases:
         - name: uaa
           tag: uaa
@@ -161,6 +197,56 @@ instance_groups:
         - name: uaa-db-user
           password: ((/bcp-sbx-bosh/bcp-sbx-core-database/uaa-db-pwd))
           tag: admin
+    
+  - name: credhub
+    release: credhub
+    properties:
+      credhub:
+        authentication:
+          uaa:
+            ca_certs:
+            - ((uaa_ssl.ca))
+            url: "https://q-s0.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
+            verification_key: ((uaa_jwt_signing_key.public_key))
+        authorization:
+          acls:
+            enabled: false
+        certificates:
+          concatenate_cas: true
+        data_storage:
+          database: credhub
+          host: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
+          password: ((/bcp-sbx-bosh/bcp-sbx-core-database/credhub-db-pwd))
+          port: 3306
+          require_tls: true
+          tls_ca: ((/bcp-sbx-bosh/bcp-sbx-core-database/mysql_server_certificate.ca))
+          type: mysql
+          username: credhub-db-user
+        encryption:
+          keys:
+          - active: true
+            key_properties:
+              encryption_password: ((credhub_encryption_password))
+            provider_name: internal
+          providers:
+          - name: internal
+            type: internal
+        tls: ((credhub_tls))
+
+  - name: bbr-credhubdb
+    release: credhub
+    properties:
+      credhub:
+        data_storage:
+          database: credhub
+          host: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
+          password: ((/bcp-sbx-bosh/bcp-sbx-core-database/credhub-db-pwd))
+          port: 3306
+          require_tls: true
+          tls_ca: ((/bcp-sbx-bosh/bcp-sbx-core-database/mysql_server_certificate.ca))
+          type: mysql
+          username: credhub-db-user
+      release_level_backup: true
 
 update:
   canaries: 1
@@ -169,6 +255,7 @@ update:
   update_watch_time: 10000-600000
 
 variables:
+# Variables for Minio and common core services ca
 - name: minio_accesskey
   type: password
 
@@ -179,7 +266,8 @@ variables:
   type: certificate
   options:
     is_ca: true
-    common_name: BCP Core Blobstore CA
+    common_name: Core Services CA
+    # common_name: BCP Core Blobstore CA
 
 - name: blobstore_cert
   type: certificate
@@ -214,6 +302,7 @@ variables:
   options:
     alternative_names:
     - q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
+    - "*.core-services.vsphere-default.bcp-sbx-core-services.bosh"
     ca: core_services_ca
     common_name: q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
   type: certificate
@@ -222,6 +311,29 @@ variables:
   options:
     alternative_names:
     - q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
+    - "*.core-services.vsphere-default.bcp-sbx-core-services.bosh"
     ca: core_services_ca
     common_name: q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
   type: certificate
+
+# Variables for Credhub
+- name: credhub_tls
+  options:
+    alternative_names:
+    - q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
+    - "*.core-services.vsphere-default.bcp-sbx-core-services.bosh"
+    ca: core_services_ca
+    common_name: q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
+  type: certificate
+
+- name: credhub_cli_user_password
+  type: password
+
+- name: credhub_encryption_password
+  type: password
+
+- name: uaa_clients_director_to_credhub
+  type: password
+
+- name: credhub_admin_client_secret
+  type: password

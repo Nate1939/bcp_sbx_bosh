@@ -45,6 +45,7 @@ instance_groups:
       admin_password: ((admin_password))
       remote_admin_access: true
       tls:
+        required: true
         galera: ((galera_server_certificate))
         server: ((mysql_server_certificate))
       engine_config:
@@ -134,10 +135,13 @@ variables:
   options:
     ca: pxc_galera_ca
     extended_key_usage: [ "server_auth", "client_auth" ]
-    common_name: galera_server_certificate
+    common_name: "*.mysql.vsphere-default.bcp-sbx-core-database.bosh"
+    #common_name: galera_server_certificate
 
 - name: mysql_server_certificate
   type: certificate
   options:
+    alternative_names:
+    - "*.mysql.vsphere-default.bcp-sbx-core-database.bosh"
     ca: pxc_server_ca
-    common_name: mysql_server_certificate
+    common_name: "*.mysql.vsphere-default.bcp-sbx-core-database.bosh"
