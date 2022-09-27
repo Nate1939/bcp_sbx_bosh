@@ -111,8 +111,6 @@ if [[ $? -eq 0 ]]; then
     bosh -n update-runtime-config "bcp/clones/bosh-deployment/runtime-configs/dns.yml"
 
     # Upload Ubuntu Bionic stemcell
-    # bosh -n upload-stemcell --sha1 4cf0de2078b94dfdeb01ac6e3af7a32c31df5171 \
-    #     https://bosh.io/d/stemcells/bosh-vsphere-esxi-ubuntu-bionic-go_agent?v=1.36
     bosh -n upload-stemcell --sha1 4ae315162c90a95cc067ce13030916ff8c4fbfd5 \
         https://bosh.io/d/stemcells/bosh-vsphere-esxi-ubuntu-bionic-go_agent?v=1.97
     
