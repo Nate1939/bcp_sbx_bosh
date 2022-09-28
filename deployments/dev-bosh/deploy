@@ -51,24 +51,17 @@ check_deployment_and_selected_director
 bosh -e "$TARGET_DIRECTOR" -d "$DEPLOYMENT_NAME" \
     deploy "bcp/clones/bosh-deployment/bosh.yml" \
     -v director_name="$DEPLOYMENT_NAME" \
-    -v internal_ip="172.16.174.180" \
-    -v internal_gw="172.16.174.1" \
-    -v internal_cidr="172.16.174.0/24" \
-    -o "bcp/clones/bosh-deployment/uaa.yml" \
-    -o "bcp/clones/bosh-deployment/credhub.yml" \
+    -v internal_ip="172.16.174.190" \
+    -o "ops/add-azure-cpi.yml" \
+    -o "deployments/dev-bosh/ops/modify-for-deployment-by-bosh.yml" \
+    -o "deployments/dev-bosh/ops/external-db.yml" \
+    -o "deployments/dev-bosh/ops/external-credhub.yml" \
+    -o "deployments/dev-bosh/ops/external-uaa.yml" \
     -o "bcp/clones/bosh-deployment/jumpbox-user.yml" \
     -o "bcp/clones/bosh-deployment/misc/trusted-certs.yml" \
         --var-file trusted_ca_cert="bcp/blobs/puzzel-qa-ca-certs.pem" \
-    -o "bcp/clones/bosh-deployment/misc/dns.yml" \
-        -v internal_dns='["172.16.140.18", "172.16.140.20"]' \
     -o "common-ops/change-deployment-name.yml" \
-        -v deployment_name="$DEPLOYMENT_NAME" \
-    -o "common-ops/uaa-use-xxx-ldap.yml" \
-        -v ldap_bind_dn="$(vault kv get -field=ldap-$DEPLOYMENT_NAME-bind-dn platform/credentials)" \
-        -v ldap_bind_password="$(vault kv get -field=ldap-$DEPLOYMENT_NAME-bind-password platform/credentials)" \
-    -o "deployments/dev-bosh/ops/bosh-uaa-external-group-mappings.yml" \
-    -o "deployments/dev-bosh/ops/modify-for-deployment-by-bosh.yml" \
-    -o "deployments/dev-bosh/ops/external-db.yml"
+        -v deployment_name="$DEPLOYMENT_NAME"
 
 ##
 # Post-deployment activities

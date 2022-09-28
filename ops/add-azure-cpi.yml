@@ -3,9 +3,9 @@
   type: replace
   value:
     name: "bosh-azure-cpi"
-    version: "39.0.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry/bosh-azure-cpi-release?v=39.0.0"
-    sha1: "dce9cbc36b19ede2270ad37d73ad5ad434e86f9f"
+    version: "40.0.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/bosh-azure-cpi-release?v=40.0.0"
+    sha1: "725fcfd44a5954239630b21a8a8162782acefda7"
 
 - path: /instance_groups/name=bosh/jobs/-
   type: replace

@@ -43,7 +43,7 @@
   path: /stemcells?/-
   value:
     alias: default
-    os: ubuntu-xenial
+    os: ubuntu-bionic
     version: latest
 
 - type: replace
@@ -61,12 +61,12 @@
 # Need an Availability Zone to run this bosh-deployment in
 - type: replace
   path: /instance_groups/name=bosh/azs?
-  value: [z1z2-dual]
+  value: [vsphere]
 
 # Change to the correct network
 - type: replace
   path: /instance_groups/name=bosh/networks/0/name
-  value: sbx-infra
+  value: vsphere-default
 
 # bosh-deployment assumes the use of `create-env`, which has its own
 # logic for how to deal with updates of the Director.
@@ -78,3 +78,23 @@
     max_in_flight: 1
     canary_watch_time: 30000-180000
     update_watch_time: 30000-180000
+
+# Remove remaining variables that are created by core-services or mysql deployment instead.
+# Also, make sure the fields in bosh.yml that still needs the variables point to correct credhub path
+- type: remove
+  path: /variables/name=hm_password
+
+- path: /instance_groups/name=bosh/properties/hm/director_account/password
+  type: replace
+  value: ((/bcp-sbx-bosh/bcp-sbx-core-services/hm_password))
+
+- type: remove
+  path: /variables/name=nats_sync_password
+
+- path: /instance_groups/name=bosh/properties/nats/director_account/password
+  type: replace
+  value: ((/bcp-sbx-bosh/bcp-sbx-core-services/nats_sync_password))
+
+# Was only used in user_management.local, which is deleted by external-uaa.yml ops file
+- type: remove
+  path: /variables/name=admin_password

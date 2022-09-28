@@ -1,0 +1,33 @@
+---
+# Change user management provider on the director from th default, local, to UAA
+- path: /instance_groups/name=bosh/properties/director/user_management/provider
+  type: replace
+  value: uaa
+
+# Remove list of users that can authenticate with the the director in non-UAA mode
+- path: /instance_groups/name=bosh/properties/director/user_management/local
+  type: remove
+
+# Target external UAA server
+- path: /instance_groups/name=bosh/properties/director/user_management/uaa?/url
+  type: replace
+  value: "https://q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
+
+# Public key to verify UAA token when token is encoded with asymmetric encryption'
+- path: /instance_groups/name=bosh/properties/director/user_management/uaa/public_key?
+  type: replace
+  value: ((/bcp-sbx-bosh/bcp-sbx-core-services/uaa_jwt_signing_key.public_key))
+
+# UAA clients to access Bosh Director
+- path: /instance_groups/name=bosh/properties/hm/director_account/client_id?
+  type: replace
+  value: hm
+- path: /instance_groups/name=bosh/properties/hm/director_account/client_secret?
+  type: replace
+  value: ((/bcp-sbx-bosh/bcp-sbx-core-services/hm_password))
+- path: /instance_groups/name=bosh/properties/nats/director_account/client_id?
+  type: replace
+  value: nats
+- path: /instance_groups/name=bosh/properties/nats/director_account/client_secret?
+  type: replace
+  value: ((/bcp-sbx-bosh/bcp-sbx-core-services/nats_sync_password))

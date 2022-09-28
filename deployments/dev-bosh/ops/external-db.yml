@@ -1,3 +1,4 @@
+---
 - type: remove
   path: /instance_groups/name=bosh/jobs/name=postgres-10?
 
@@ -10,27 +11,17 @@
 - type: remove
   path: /instance_groups/name=bosh/properties/postgres
 
+- type: remove
+  path: /variables/name=postgres_password
+
 - type: replace
   path: /instance_groups/name=bosh/properties/director/db
   value:
     host: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
     port: 3306
-    user: ((external_db_user))
-    password: ((external_db_password))
-    adapter: mysql
-    database: devbosh
-    tls:
-      enabled: true
-      cert.ca: ((/bcp-sbx-bosh/bcp-sbx-core-database/mysql_server_certificate.ca))
-
-- type: replace
-  path: /instance_groups/name=bosh/properties/registry?/db
-  value:
-    host: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
-    port: 3306
-    user: ((external_db_user))
-    password: ((external_db_password))
-    adapter: mysql
+    user: devbosh-db-user
+    password: ((/bcp-sbx-bosh/bcp-sbx-core-database/devbosh-db-pwd))
+    adapter: mysql2
     database: devbosh
     tls:
       enabled: true
