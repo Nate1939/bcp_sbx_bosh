@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# executable: deployments/sbx-bosh/deploy
+# executable: deployments/dev-bosh/deploy
 #
-# Deploty the Sandbox BOSH Director
+# Deploy the Dev BOSH Director
 #
 set -euo pipefail
 
@@ -16,14 +16,14 @@ cd "$scriptAbsolutePath/../../"
 # bcp Setup
 # Validates the current setup and guides the user if deviations are found
 #
-. ".scripts/setup.sh"
+. "bcp/.scripts/setup.sh"
 
 ##
 # !! DEPLOYMENT METADATA !!
 #    Must be filled out!
 #
-DEPLOYMENT_NAME="sbx-bosh"
-DEPLOYMENT_DIRECTOR="mgmt-bosh"
+DEPLOYMENT_NAME="dev-bosh"
+DEPLOYMENT_DIRECTOR="bcp-sbx-bosh"
 
 echo_deployment_metadata
 
@@ -49,37 +49,26 @@ check_deployment_and_selected_director
 # BOSH Deployment Definition
 #
 bosh -e "$TARGET_DIRECTOR" -d "$DEPLOYMENT_NAME" \
-    deploy "clones/bosh-deployment/bosh.yml" \
+    deploy "bcp/clones/bosh-deployment/bosh.yml" \
     -v director_name="$DEPLOYMENT_NAME" \
-    -v internal_ip="10.64.152.134" \
-    -v internal_gw="10.64.152.129" \
-    -v internal_cidr="10.64.152.128/27" \
-    -o "clones/bosh-deployment/vsphere/cpi.yml" \
-        -v network_name="nnn-sbx-infra.nnn1.osl.zzz.net" \
-        -v vcenter_dc="CAP-ppp" \
-        -v vcenter_cluster="nnn-Hybrid-OSL-MGMT-C01" \
-        -v vcenter_ds="^(nnn\\-mgmt\\-std\\-dual\\-osl3\\-3par05\\-L00|nnn\\-san\\-std\\-dual\\-osl3\\-3par05\\-L00|nnn\\-san\\-std\\-single\\-osl3\\-3par05\\-L00|nnn\\-san\\-std\\-single\\-osl5\\-3par06\\-L00)$" \
-        -v vcenter_ip="10.76.38.4" \
-        -v vcenter_user="$(vault kv get -field=iaas-vcenter-user platform/credentials)" \
-        -v vcenter_password="$(vault kv get -field=iaas-vcenter-password platform/credentials)" \
-        -v vcenter_templates="$DEPLOYMENT_NAME-templates" \
-        -v vcenter_vms="$DEPLOYMENT_NAME-vms" \
-        -v vcenter_disks="$DEPLOYMENT_NAME-disks" \
-    -o "clones/bosh-deployment/uaa.yml" \
-    -o "clones/bosh-deployment/credhub.yml" \
-    -o "clones/bosh-deployment/jumpbox-user.yml" \
-    -o "clones/bosh-deployment/misc/trusted-certs.yml" \
-        --var-file trusted_ca_cert="blobs/xxx-yyy-ca-certs.pem" \
-    -o "common-ops/add-trusted-ca-certs-to-director-vm.yml" \
-        --var-file director_vm_trusted_ca_certs="blobs/xxx-yyy-ca-certs.pem" \
-    -o "common-ops/use-zzz-dns.yml" \
+    -v internal_ip="172.16.174.180" \
+    -v internal_gw="172.16.174.1" \
+    -v internal_cidr="172.16.174.0/24" \
+    -o "bcp/clones/bosh-deployment/uaa.yml" \
+    -o "bcp/clones/bosh-deployment/credhub.yml" \
+    -o "bcp/clones/bosh-deployment/jumpbox-user.yml" \
+    -o "bcp/clones/bosh-deployment/misc/trusted-certs.yml" \
+        --var-file trusted_ca_cert="bcp/blobs/puzzel-qa-ca-certs.pem" \
+    -o "bcp/clones/bosh-deployment/misc/dns.yml" \
+        -v internal_dns='["172.16.140.18", "172.16.140.20"]' \
     -o "common-ops/change-deployment-name.yml" \
         -v deployment_name="$DEPLOYMENT_NAME" \
     -o "common-ops/uaa-use-xxx-ldap.yml" \
         -v ldap_bind_dn="$(vault kv get -field=ldap-$DEPLOYMENT_NAME-bind-dn platform/credentials)" \
         -v ldap_bind_password="$(vault kv get -field=ldap-$DEPLOYMENT_NAME-bind-password platform/credentials)" \
-    -o "deployments/sbx-bosh/ops/bosh-uaa-external-group-mappings.yml" \
-    -o "deployments/sbx-bosh/ops/modify-for-deployment-by-bosh.yml"
+    -o "deployments/dev-bosh/ops/bosh-uaa-external-group-mappings.yml" \
+    -o "deployments/dev-bosh/ops/modify-for-deployment-by-bosh.yml" \
+    -o "deployments/dev-bosh/ops/external-db.yml"
 
 ##
 # Post-deployment activities
@@ -96,15 +85,15 @@ if [[ $? -eq 0 ]]; then
     sync_creds_file_to_blob_store "$DEPLOYMENT_NAME" "sync"
     sync_state_file_to_git "$DEPLOYMENT_NAME" "sync"
 
-    # Instruct the user to finish the 'sbx-bosh' setup by following these stems
-    bold_green_msg "The Sandbox (Sbx) BOSH Director is now ready!\n"
+    # Instruct the user to finish the 'dev-bosh' setup by following these stems
+    bold_green_msg "The Dev (dev) BOSH Director is now ready!\n"
     bold_msg "Please perform the following stems to finish the setup:\n"
-    normal_msg "1) Select the new Sandbox (Sbx) BOSH Director"
-    bold_msg "./bcp/select-director.sh sbx-bosh\n"
+    normal_msg "1) Select the new Dev (dev) BOSH Director"
+    bold_msg "./bcp/select-director.sh dev-bosh\n"
     normal_msg "2) Upload the Cloud Config"
-    bold_msg "bosh update-cloud-config cloud-config/sbx-bosh/cloud-config.yml\n"
+    bold_msg "bosh update-cloud-config cloud-config/dev-bosh/cloud-config.yml\n"
     normal_msg "3) Update the runtime config to enable BOSH DNS"
-    bold_msg "bosh update-runtime-config clones/bosh-deployment/runtime-configs/dns.yml --name bosh-dns\n\n"
+    bold_msg "bosh update-runtime-config bcp/clones/bosh-deployment/runtime-configs/dns.yml --name bosh-dns\n\n"
 fi
 
 ##

@@ -25,3 +25,42 @@
     name: credhub-db-pwd
     type: password
 
+- type: replace
+  path: /instance_groups/name=mysql/jobs/name=pxc-mysql/properties/seeded_databases?/-
+  value:
+    name: devbosh
+    username: devbosh-db-user
+    password: ((devbosh-db-pwd))
+
+- type: replace
+  path: /variables?/-
+  value:
+    name: devbosh-db-pwd
+    type: password
+
+- type: replace
+  path: /instance_groups/name=mysql/jobs/name=pxc-mysql/properties/seeded_databases?/-
+  value:
+    name: stagingbosh
+    username: stagingbosh-db-user
+    password: ((stagingbosh-db-pwd))
+
+- type: replace
+  path: /variables?/-
+  value:
+    name: stagingbosh-db-pwd
+    type: password
+
+- type: replace
+  path: /instance_groups/name=mysql/jobs/name=pxc-mysql/properties/seeded_databases?/-
+  value:
+    name: playgroundbosh
+    username: playgroundbosh-db-user
+    password: ((playgroundbosh-db-pwd))
+
+- type: replace
+  path: /variables?/-
+  value:
+    name: playgroundbosh-db-pwd
+    type: password
+
