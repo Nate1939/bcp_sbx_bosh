@@ -158,19 +158,13 @@ instance_groups:
         - ((/bcp-sbx-bosh/bcp-sbx-core-database/mysql_server_certificate.ca))
         sslCertificate: ((uaa_ssl.certificate))
         sslPrivateKey: ((uaa_ssl.private_key))
-        #url: https://((internal_ip)):8443
-        url: "https://q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
+        url: "https://q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
         zones:
           internal:
             hostnames:
-            # - ((internal_ip))
-            - "q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh"
-            - "q-s0.core-services.vsphere-default.bcp-sbx-core-services.bosh"
-            - "bosh-core-services.qa.local"
-            #- "172.16.174.184"
+            - "q-s0y1.core-services.vsphere-default.bcp-sbx-core-services.bosh"
       uaadb:
-        address: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
-        # address: "172.16.174.181"
+        address: "q-s3y1.mysql.vsphere-default.bcp-sbx-core-database.bosh"
         databases:
         - name: uaa
           tag: uaa
@@ -187,8 +181,7 @@ instance_groups:
     properties:
       release_level_backup: true
       uaadb:
-        address: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
-        #address: "172.16.174.181"
+        address: "q-s3y1.mysql.vsphere-default.bcp-sbx-core-database.bosh"
         ca_cert: ((/bcp-sbx-bosh/bcp-sbx-core-database/mysql_server_certificate.ca))
         databases:
         - name: uaa
@@ -199,7 +192,7 @@ instance_groups:
         - name: uaa-db-user
           password: ((/bcp-sbx-bosh/bcp-sbx-core-database/uaa-db-pwd))
           tag: admin
-    
+
   - name: credhub
     release: credhub
     properties:
@@ -208,9 +201,7 @@ instance_groups:
           uaa:
             ca_certs:
             - ((uaa_ssl.ca))
-            # url: "https://q-s0.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
-            # url: "https://172.16.174.184:8443"
-            url: "https://bosh-core-services.qa.local:8443"
+            url: "https://q-s0y1.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
             verification_key: ((uaa_jwt_signing_key.public_key))
         authorization:
           acls:
@@ -219,7 +210,7 @@ instance_groups:
           concatenate_cas: true
         data_storage:
           database: credhub
-          host: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
+          host: "q-s3y1.mysql.vsphere-default.bcp-sbx-core-database.bosh"
           password: ((/bcp-sbx-bosh/bcp-sbx-core-database/credhub-db-pwd))
           port: 3306
           require_tls: true
@@ -243,7 +234,7 @@ instance_groups:
       credhub:
         data_storage:
           database: credhub
-          host: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
+          host: "q-s3y1.mysql.vsphere-default.bcp-sbx-core-database.bosh"
           password: ((/bcp-sbx-bosh/bcp-sbx-core-database/credhub-db-pwd))
           port: 3306
           require_tls: true
@@ -305,33 +296,29 @@ variables:
 - name: uaa_ssl
   options:
     alternative_names:
-    - q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
+    - q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh
     - "*.core-services.vsphere-default.bcp-sbx-core-services.bosh"
-    # - "172.16.174.184"
-    - "bosh-core-services.qa.local"
     ca: core_services_ca
-    common_name: q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
+    common_name: q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh
   type: certificate
 
 - name: uaa_service_provider_ssl
   options:
     alternative_names:
-    - q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
+    - q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh
     - "*.core-services.vsphere-default.bcp-sbx-core-services.bosh"
-    - "bosh-core-services.qa.local"
     ca: core_services_ca
-    common_name: q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
+    common_name: q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh
   type: certificate
 
 # Variables for Credhub
 - name: credhub_tls
   options:
     alternative_names:
-    - q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
+    - q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh
     - "*.core-services.vsphere-default.bcp-sbx-core-services.bosh"
-    - "bosh-core-services.qa.local"
     ca: core_services_ca
-    common_name: q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
+    common_name: q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh
   type: certificate
 
 - name: credhub_cli_user_password
