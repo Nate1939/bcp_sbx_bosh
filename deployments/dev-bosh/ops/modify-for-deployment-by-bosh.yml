@@ -79,6 +79,23 @@
     canary_watch_time: 30000-180000
     update_watch_time: 30000-180000
 
+# Update releases section to not use releases already compiled against a specific stemcell
+- type: replace
+  path: /releases/name=bosh?
+  value:
+    name: "bosh"
+    version: "274.4.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/bosh?v=274.4.0"
+    sha1: "7cfabcfb3ba96497de49bcc1b2ca8ad32e855c98"
+
+- type: replace
+  path: /releases/name=bpm?
+  value:
+    name: "bpm"
+    version: "1.1.19"
+    url: "https://bosh.io/d/github.com/cloudfoundry/bpm-release?v=1.1.19"
+    sha1: "669baca975c6def518c7e736dbf189cfb438475b"
+
 # Remove remaining variables that are created by core-services or mysql deployment instead.
 # Also, make sure the fields in bosh.yml that still needs the variables point to correct credhub path
 - type: remove

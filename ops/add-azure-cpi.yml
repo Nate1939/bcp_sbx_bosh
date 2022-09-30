@@ -13,6 +13,10 @@
     name: azure_cpi
     release: bosh-azure-cpi
 
+- path: /instance_groups/name=bosh/properties/director/cpi_job?
+  type: replace
+  value: azure_cpi
+
 - path: /instance_groups/name=bosh/properties/azure?
   type: replace
   value:

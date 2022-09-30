@@ -166,6 +166,8 @@ instance_groups:
             # - ((internal_ip))
             - "q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh"
             - "q-s0.core-services.vsphere-default.bcp-sbx-core-services.bosh"
+            - "bosh-core-services.qa.local"
+            #- "172.16.174.184"
       uaadb:
         address: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
         # address: "172.16.174.181"
@@ -206,7 +208,9 @@ instance_groups:
           uaa:
             ca_certs:
             - ((uaa_ssl.ca))
-            url: "https://q-s0.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
+            # url: "https://q-s0.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
+            # url: "https://172.16.174.184:8443"
+            url: "https://bosh-core-services.qa.local:8443"
             verification_key: ((uaa_jwt_signing_key.public_key))
         authorization:
           acls:
@@ -303,6 +307,8 @@ variables:
     alternative_names:
     - q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
     - "*.core-services.vsphere-default.bcp-sbx-core-services.bosh"
+    # - "172.16.174.184"
+    - "bosh-core-services.qa.local"
     ca: core_services_ca
     common_name: q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
   type: certificate
@@ -312,6 +318,7 @@ variables:
     alternative_names:
     - q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
     - "*.core-services.vsphere-default.bcp-sbx-core-services.bosh"
+    - "bosh-core-services.qa.local"
     ca: core_services_ca
     common_name: q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
   type: certificate
@@ -322,6 +329,7 @@ variables:
     alternative_names:
     - q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
     - "*.core-services.vsphere-default.bcp-sbx-core-services.bosh"
+    - "bosh-core-services.qa.local"
     ca: core_services_ca
     common_name: q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh
   type: certificate

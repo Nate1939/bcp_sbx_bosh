@@ -25,4 +25,5 @@
     database: devbosh
     tls:
       enabled: true
-      cert.ca: ((/bcp-sbx-bosh/bcp-sbx-core-database/mysql_server_certificate.ca))
+      cert:
+        ca: ((/bcp-sbx-bosh/bcp-sbx-core-database/mysql_server_certificate.ca))
