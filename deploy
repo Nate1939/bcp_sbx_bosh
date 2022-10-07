@@ -69,7 +69,6 @@ bosh create-env "bcp/clones/bosh-deployment/bosh.yml" \
         -v vcenter_disks="$DEPLOYMENT_NAME-disks" \
     -o "bcp/clones/bosh-deployment/misc/ntp.yml" \
         -v internal_ntp='["q1dc01.qa.local", "q1dc02.qa.local"]' \
-    -o ops/add-azure-cpi.yml \
     -o "bcp/clones/bosh-deployment/uaa.yml" \
     -o "bcp/clones/bosh-deployment/credhub.yml" \
     -o "bcp/clones/bosh-deployment/jumpbox-user.yml" \
