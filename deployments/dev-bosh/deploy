@@ -60,6 +60,8 @@ bosh -e "$TARGET_DIRECTOR" -d "$DEPLOYMENT_NAME" \
     -o "bcp/clones/bosh-deployment/jumpbox-user.yml" \
     -o "bcp/clones/bosh-deployment/misc/trusted-certs.yml" \
         --var-file trusted_ca_cert="bcp/blobs/puzzel-qa-ca-certs.pem" \
+    -o "deployments/dev-bosh/ops/add-trusted-ca-certs-to-director-vm.yml" \
+        --var-file director_vm_trusted_ca_certs="bcp/blobs/puzzel-qa-ca-certs.pem" \
     -o "bcp/common-ops/change-deployment-name.yml" \
         -v deployment_name="$DEPLOYMENT_NAME"
 

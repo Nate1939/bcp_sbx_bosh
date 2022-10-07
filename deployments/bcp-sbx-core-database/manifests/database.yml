@@ -133,10 +133,11 @@ variables:
 - name: galera_server_certificate
   type: certificate
   options:
+    alternative_names:
+    - "*.mysql.vsphere-default.bcp-sbx-core-database.bosh"
     ca: pxc_galera_ca
     extended_key_usage: [ "server_auth", "client_auth" ]
-    common_name: "*.mysql.vsphere-default.bcp-sbx-core-database.bosh"
-    #common_name: galera_server_certificate
+    common_name: galera_server_certificate
 
 - name: mysql_server_certificate
   type: certificate
@@ -144,4 +145,4 @@ variables:
     alternative_names:
     - "*.mysql.vsphere-default.bcp-sbx-core-database.bosh"
     ca: pxc_server_ca
-    common_name: "*.mysql.vsphere-default.bcp-sbx-core-database.bosh"
+    common_name: mysql_server_certificate

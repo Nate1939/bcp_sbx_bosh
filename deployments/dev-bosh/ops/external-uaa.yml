@@ -11,7 +11,9 @@
 # Target external UAA server
 - path: /instance_groups/name=bosh/properties/director/user_management/uaa?/url
   type: replace
-  value: "https://q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
+  # value: "https://172.16.174.184:8443"
+  value: "https://bosh-core-services.qa.local:8443"
+  # value: "https://q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
 
 # Public key to verify UAA token when token is encoded with asymmetric encryption'
 - path: /instance_groups/name=bosh/properties/director/user_management/uaa/public_key?

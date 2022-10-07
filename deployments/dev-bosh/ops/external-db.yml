@@ -17,7 +17,7 @@
 - type: replace
   path: /instance_groups/name=bosh/properties/director/db
   value:
-    host: "q-s3.mysql.vsphere-default.bcp-sbx-core-database.bosh"
+    host: "q-s3y1.mysql.vsphere-default.bcp-sbx-core-database.bosh"
     port: 3306
     user: devbosh-db-user
     password: ((/bcp-sbx-bosh/bcp-sbx-core-database/devbosh-db-pwd))

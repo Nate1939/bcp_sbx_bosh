@@ -8,5 +8,5 @@
       ca_cert: ((/bcp-sbx-bosh/bcp-sbx-core-services/uaa_ssl.ca))
       client_id: director_to_credhub
       client_secret: ((/bcp-sbx-bosh/bcp-sbx-core-services/uaa_clients_director_to_credhub))
-      url: "https://q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
-    url: "https://q-s3.core-services.vsphere-default.bcp-sbx-core-services.bosh:8844/api/"
+      url: "https://q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
+    url: "https://q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh:8844/api/"
