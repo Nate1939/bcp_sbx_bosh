@@ -48,7 +48,7 @@ check_deployment_and_selected_director
 ##
 # BOSH Deployment Definition
 #
-bosh -e "$TARGET_DIRECTOR" -d "$DEPLOYMENT_NAME" \
+bosh -e "$DEPLOYMENT_DIRECTOR" -d "$DEPLOYMENT_NAME" \
     deploy "bcp/clones/bosh-deployment/bosh.yml" \
     -v director_name="$DEPLOYMENT_NAME" \
     -v internal_ip="172.16.174.190" \
