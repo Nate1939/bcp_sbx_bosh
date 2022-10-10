@@ -73,7 +73,7 @@ if [[ $? -eq 0 ]]; then
     # Create a dummy 'state.json' for use by the select-director.sh script
     printf "{\n"                                    >  "deployments/$DEPLOYMENT_NAME/state.json"
     printf "  \"deployed\": \"true\",\n"            >> "deployments/$DEPLOYMENT_NAME/state.json"
-    printf "  \"director\": \"$TARGET_DIRECTOR\"\n" >> "deployments/$DEPLOYMENT_NAME/state.json"
+    printf "  \"director\": \"$DEPLOYMENT_DIRECTOR\"\n" >> "deployments/$DEPLOYMENT_NAME/state.json"
     printf "}"                                      >> "deployments/$DEPLOYMENT_NAME/state.json"
 
     # Sync 'creds.yml' and 'state.json' files to the external stores
