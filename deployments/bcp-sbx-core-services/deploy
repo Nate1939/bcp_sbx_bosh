@@ -44,26 +44,43 @@ load_dependencies ${dependencies[@]+"${dependencies[@]}"}
 check_deployment_and_selected_director
 
 ##
-# BOSH Deployment Definition: bcp core services - blobstore
-# use -n before -e if you do not wish to require user acceptance after it has been listed what will actually be deployed
-bosh -e "$DEPLOYMENT_DIRECTOR" -d "${DEPLOYMENT_NAME}" \
-    deploy --no-redact "deployments/$DEPLOYMENT_NAME/manifests/core-services.yml" \
-    -o "deployments/$DEPLOYMENT_NAME/ops/bosh-uaa-use-puzzel-ldap.yml" \
-        -v ldap_server_urls="ldap://q1dc01.qa.local:389 ldap://q1dc02.qa.local:389" \
-        -v ldap_bind_dn="$(az keyvault secret show --vault-name "bosh-prod-uks-kv" --name "ldap-$DEPLOYMENT_DIRECTOR-bind-dn" --query "value" -o tsv)" \
-        -v ldap_bind_password="$(az keyvault secret show --vault-name "bosh-prod-uks-kv" --name "ldap-$DEPLOYMENT_DIRECTOR-bind-password" --query "value" -o tsv)" \
-        -v ldap_search_base="OU=QALOCAL,DC=qa,DC=local" \
-        -v ldap_group_search_base="OU=Groups,OU=QALOCAL,DC=qa,DC=local" \
-    -o "deployments/$DEPLOYMENT_NAME/ops/bosh-uaa-external-group-mappings.yml"
+# BOSH Deployment Definition: bcp core services
+if ! [[ $# -eq 1 && $1 = "skip_deployment" ]]; then
+    bosh -e "$DEPLOYMENT_DIRECTOR" -d "${DEPLOYMENT_NAME}" \
+        deploy --no-redact "deployments/$DEPLOYMENT_NAME/manifests/core-services.yml" \
+        -o "deployments/$DEPLOYMENT_NAME/ops/bosh-uaa-use-puzzel-ldap.yml" \
+            -v ldap_server_urls="ldap://q1dc01.qa.local:389 ldap://q1dc02.qa.local:389" \
+            -v ldap_bind_dn="$(az keyvault secret show --vault-name "bosh-prod-uks-kv" --name "ldap-$DEPLOYMENT_DIRECTOR-bind-dn" --query "value" -o tsv)" \
+            -v ldap_bind_password="$(az keyvault secret show --vault-name "bosh-prod-uks-kv" --name "ldap-$DEPLOYMENT_DIRECTOR-bind-password" --query "value" -o tsv)" \
+            -v ldap_search_base="OU=QALOCAL,DC=qa,DC=local" \
+            -v ldap_group_search_base="OU=Groups,OU=QALOCAL,DC=qa,DC=local" \
+        -o "deployments/$DEPLOYMENT_NAME/ops/bosh-uaa-external-group-mappings.yml"
+fi
 
 ##
 # Post-deployment activities
 #
 if [[ $? -eq 0 ]]; then
-    #
-    # No activities specified
-    #
-    echo ""
+    
+    # Create pem file with ca certs to be trusted in bosh directors deployed by management bosh and their deployments
+        # Check if the user is logged into CredHub
+        bcpBoshInternalIpVar=$(cat deploy | grep internal_ip)
+        [[ $bcpBoshInternalIpVar =~ \"([0-9.]+)\" ]]
+        BCP_BOSH_IP="${BASH_REMATCH[1]}"
+        credhubServerVersion="$(credhub login --version)"
+        if [[ $(echo "$credhubServerVersion" | grep -cim1 "Server Version: Not Found") -eq 1 ]]; then
+            bold_yellow_msg "\nYou must login to CredHub to be able to retrieve core_services_ca, and populate dynamic-puzzel-sbx-ca-certs.pem!"
+            bold_yellow_msg "Run the following commands to login to credhub and populate dynamic-puzzel-sbx-ca-certs.pem:\n"
+            normal_msg " credhub api -s https://$BCP_BOSH_IP:8844 --skip-tls-validation"
+            normal_msg " credhub login\n"
+            normal_msg " ./deployments/$DEPLOYMENT_NAME/deploy skip_deployment"
+            exit 1
+        fi
+
+        # Create and populate dynamic-puzzel-sbx-ca-certs.pem with root certificates to be trusted
+        cat bcp/blobs/puzzel-qa-ca-certs.pem > deployments/dev-bosh/blobs/dynamic-puzzel-sbx-ca-certs.pem
+        printf "\n" >> deployments/dev-bosh/blobs/dynamic-puzzel-sbx-ca-certs.pem
+        credhub get -n /$DEPLOYMENT_DIRECTOR/$DEPLOYMENT_NAME/core_services_ca -k ca | sed -e :a -e '/^\n*$/{$d;N;};/\n$/ba' >> deployments/dev-bosh/blobs/dynamic-puzzel-sbx-ca-certs.pem
 fi
 
 ##

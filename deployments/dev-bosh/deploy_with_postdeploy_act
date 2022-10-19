@@ -48,23 +48,23 @@ check_deployment_and_selected_director
 ##
 # BOSH Deployment Definition
 #
-# bosh -e "$DEPLOYMENT_DIRECTOR" -d "$DEPLOYMENT_NAME" \
-#     deploy "bcp/clones/bosh-deployment/bosh.yml" \
-#     -v director_name="$DEPLOYMENT_NAME" \
-#     -v internal_ip="172.16.174.190" \
-#     -o "ops/add-azure-cpi.yml" \
-#     -o "deployments/dev-bosh/ops/modify-for-deployment-by-bosh.yml" \
-#     -o "deployments/dev-bosh/ops/external-db.yml" \
-#     -o "deployments/dev-bosh/ops/external-credhub.yml" \
-#     -o "deployments/dev-bosh/ops/external-uaa.yml" \
-#     -o "deployments/dev-bosh/ops/external-blobstore.yml" \
-#     -o "bcp/clones/bosh-deployment/jumpbox-user.yml" \
-#     -o "bcp/clones/bosh-deployment/misc/trusted-certs.yml" \
-#         --var-file trusted_ca_cert="bcp/blobs/puzzel-qa-ca-certs.pem" \
-#     -o "deployments/dev-bosh/ops/add-trusted-ca-certs-to-director-vm.yml" \
-#         --var-file director_vm_trusted_ca_certs="bcp/blobs/puzzel-qa-ca-certs.pem" \
-#     -o "bcp/common-ops/change-deployment-name.yml" \
-#         -v deployment_name="$DEPLOYMENT_NAME"
+bosh -e "$DEPLOYMENT_DIRECTOR" -d "$DEPLOYMENT_NAME" \
+    deploy "bcp/clones/bosh-deployment/bosh.yml" \
+    -v director_name="$DEPLOYMENT_NAME" \
+    -v internal_ip="172.16.174.190" \
+    -o "ops/add-azure-cpi.yml" \
+    -o "deployments/dev-bosh/ops/modify-for-deployment-by-bosh.yml" \
+    -o "deployments/dev-bosh/ops/external-db.yml" \
+    -o "deployments/dev-bosh/ops/external-credhub.yml" \
+    -o "deployments/dev-bosh/ops/external-uaa.yml" \
+    -o "deployments/dev-bosh/ops/external-blobstore.yml" \
+    -o "bcp/clones/bosh-deployment/jumpbox-user.yml" \
+    -o "bcp/clones/bosh-deployment/misc/trusted-certs.yml" \
+        --var-file trusted_ca_cert="deployments/dev-bosh/blobs/dynamic-puzzel-sbx-ca-certs.pem" \
+    -o "deployments/dev-bosh/ops/add-trusted-ca-certs-to-director-vm.yml" \
+        --var-file director_vm_trusted_ca_certs="deployments/dev-bosh/blobs/dynamic-puzzel-sbx-ca-certs.pem" \
+    -o "bcp/common-ops/change-deployment-name.yml" \
+        -v deployment_name="$DEPLOYMENT_NAME"
 
 ##
 # Post-deployment activities
@@ -85,7 +85,7 @@ if [[ $? -eq 0 ]]; then
     popd > /dev/null
 
     # Retrieve Azure ssh public key from Credhub, while stil targeting the management director and credhub
-    az_ssh_public_key="$(credhub get -n /$DEPLOYMENT_DIRECTOR/$DEPLOYMENT_NAME/az_ssh -k public_key)"
+    az_ssh_public_key="$(credhub get -n /$DEPLOYMENT_DIRECTOR/$DEPLOYMENT_NAME/az_ssh -k public_key | awk 'NF {print "\""$0"\""}')"
 
     # Instruct the user to finish the 'dev-bosh' setup by following these stems
     bold_green_msg "The Dev (dev) BOSH Director is now ready!\n"
@@ -93,8 +93,8 @@ if [[ $? -eq 0 ]]; then
     normal_msg "1) Select the new Dev (dev) BOSH Director"
     bold_msg "./bcp/select-director.sh dev-bosh\n"
     normal_msg "2) Update the cpi config"
-    bold_msg "az_ssh_public_key="$az_ssh_public_key" \n"
-    bold_msg "./deployments/dev-bosh/cpi-config/update-cpi-config.sh '"$az_ssh_public_key"'\n"
+    bold_msg "az_ssh_public_key=$az_ssh_public_key \n"
+    bold_msg "./deployments/dev-bosh/cpi-config/update-cpi-config.sh \"\$az_ssh_public_key\"\n"
     normal_msg "3) Upload the Cloud Config"
     bold_msg "bosh update-cloud-config deployments/dev-bosh/cloud-config/cloud-config.yml\n"
     normal_msg "4) Update the runtime config to enable BOSH DNS"
