@@ -48,23 +48,23 @@ check_deployment_and_selected_director
 ##
 # BOSH Deployment Definition
 #
-bosh -e "$DEPLOYMENT_DIRECTOR" -d "$DEPLOYMENT_NAME" \
-    deploy "bcp/clones/bosh-deployment/bosh.yml" \
-    -v director_name="$DEPLOYMENT_NAME" \
-    -v internal_ip="172.16.174.190" \
-    -o "ops/add-azure-cpi.yml" \
-    -o "deployments/dev-bosh/ops/modify-for-deployment-by-bosh.yml" \
-    -o "deployments/dev-bosh/ops/external-db.yml" \
-    -o "deployments/dev-bosh/ops/external-credhub.yml" \
-    -o "deployments/dev-bosh/ops/external-uaa.yml" \
-    -o "deployments/dev-bosh/ops/external-blobstore.yml" \
-    -o "bcp/clones/bosh-deployment/jumpbox-user.yml" \
-    -o "bcp/clones/bosh-deployment/misc/trusted-certs.yml" \
-        --var-file trusted_ca_cert="bcp/blobs/puzzel-qa-ca-certs.pem" \
-    -o "deployments/dev-bosh/ops/add-trusted-ca-certs-to-director-vm.yml" \
-        --var-file director_vm_trusted_ca_certs="bcp/blobs/puzzel-qa-ca-certs.pem" \
-    -o "bcp/common-ops/change-deployment-name.yml" \
-        -v deployment_name="$DEPLOYMENT_NAME"
+# bosh -e "$DEPLOYMENT_DIRECTOR" -d "$DEPLOYMENT_NAME" \
+#     deploy "bcp/clones/bosh-deployment/bosh.yml" \
+#     -v director_name="$DEPLOYMENT_NAME" \
+#     -v internal_ip="172.16.174.190" \
+#     -o "ops/add-azure-cpi.yml" \
+#     -o "deployments/dev-bosh/ops/modify-for-deployment-by-bosh.yml" \
+#     -o "deployments/dev-bosh/ops/external-db.yml" \
+#     -o "deployments/dev-bosh/ops/external-credhub.yml" \
+#     -o "deployments/dev-bosh/ops/external-uaa.yml" \
+#     -o "deployments/dev-bosh/ops/external-blobstore.yml" \
+#     -o "bcp/clones/bosh-deployment/jumpbox-user.yml" \
+#     -o "bcp/clones/bosh-deployment/misc/trusted-certs.yml" \
+#         --var-file trusted_ca_cert="bcp/blobs/puzzel-qa-ca-certs.pem" \
+#     -o "deployments/dev-bosh/ops/add-trusted-ca-certs-to-director-vm.yml" \
+#         --var-file director_vm_trusted_ca_certs="bcp/blobs/puzzel-qa-ca-certs.pem" \
+#     -o "bcp/common-ops/change-deployment-name.yml" \
+#         -v deployment_name="$DEPLOYMENT_NAME"
 
 ##
 # Post-deployment activities
@@ -79,7 +79,10 @@ if [[ $? -eq 0 ]]; then
 
     # Sync 'creds.yml' and 'state.json' files to the external stores
     sync_creds_file_to_blob_store "$DEPLOYMENT_NAME" "sync"
+    
+    pushd "deployments/dev-bosh/" > /dev/null
     sync_state_file_to_git "$DEPLOYMENT_NAME" "sync"
+    popd > /dev/null
 
     # Retrieve Azure ssh public key from Credhub, while stil targeting the management director and credhub
     az_ssh_public_key="$(credhub get -n /$DEPLOYMENT_DIRECTOR/$DEPLOYMENT_NAME/az_ssh -k public_key)"
