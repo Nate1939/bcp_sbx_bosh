@@ -73,7 +73,7 @@ if [[ $? -eq 0 ]]; then
             bold_yellow_msg "Run the following commands to login to credhub and populate dynamic-puzzel-sbx-ca-certs.pem:\n"
             normal_msg " credhub api -s https://$BCP_BOSH_IP:8844 --skip-tls-validation"
             normal_msg " credhub login\n"
-            normal_msg " ./deployments/$DEPLOYMENT_NAME/deploy skip_deployment"
+            normal_msg " ./deployments/$DEPLOYMENT_NAME/deploy skip_deployment\n"
             exit 1
         fi
 
