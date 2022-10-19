@@ -157,8 +157,6 @@ instance_groups:
             - credhub.write
         ca_certs:
         - ((/bcp-sbx-bosh/bcp-sbx-core-database/mysql_server_certificate.ca))
-        # possibly add ca for core services here
-        # possibly add ca for bosh director
         sslCertificate: ((uaa_ssl.certificate))
         sslPrivateKey: ((uaa_ssl.private_key))
         url: "https://q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
@@ -275,6 +273,7 @@ variables:
   options:
     ca: core_services_ca
     common_name: BCP Core Blobstore
+    alternative_names: [ 172.16.174.184, 172.16.174.185, 172.16.174.186, 172.16.174.187, bosh-core-services.qa.local ]
   consumes:
     alternative_name:
       from: blobstore-address
@@ -302,22 +301,18 @@ variables:
 - name: uaa_ssl
   options:
     alternative_names:
-    - q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh
     - "*.core-services.vsphere-default.bcp-sbx-core-services.bosh"
     - bosh-core-services.qa.local
     ca: core_services_ca
-    # common_name: q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh
     common_name: "uaa_ssl"
   type: certificate
 
 - name: uaa_service_provider_ssl
   options:
     alternative_names:
-    - q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh
     - "*.core-services.vsphere-default.bcp-sbx-core-services.bosh"
     - bosh-core-services.qa.local
     ca: core_services_ca
-    #common_name: q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh
     common_name: uaa_service_provider_ssl
   type: certificate
 
@@ -325,11 +320,9 @@ variables:
 - name: credhub_tls
   options:
     alternative_names:
-    - q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh
     - "*.core-services.vsphere-default.bcp-sbx-core-services.bosh"
     - bosh-core-services.qa.local
     ca: core_services_ca
-    # common_name: q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh
     common_name: credhub_tls
   type: certificate
 

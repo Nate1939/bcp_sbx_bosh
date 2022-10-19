@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -euo pipefail
+
+credhub get -n /bcp-sbx-bosh/dev-bosh/az_ssh -k public_key

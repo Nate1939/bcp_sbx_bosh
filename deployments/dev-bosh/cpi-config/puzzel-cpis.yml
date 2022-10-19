@@ -1,0 +1,13 @@
+---
+cpis:
+- name: azure-euw-dev
+  type: azure
+  properties:
+    environment: ((az_euw_dev_environment))
+    subscription_id: ((az_euw_dev_subscription_id))
+    tenant_id: ((az_euw_dev_tenant_id))
+    client_id: ((az_euw_dev_client_id))
+    client_secret: ((az_euw_dev_client_secret))
+    resource_group_name: ((az_euw_dev_resource_group_name))
+    ssh_public_key: ((az_euw_dev_ssh_public_key))
+    use_managed_disks: ((az_euw_dev_use_managed_disks))

@@ -81,14 +81,20 @@ if [[ $? -eq 0 ]]; then
     sync_creds_file_to_blob_store "$DEPLOYMENT_NAME" "sync"
     sync_state_file_to_git "$DEPLOYMENT_NAME" "sync"
 
+    # Retrieve Azure ssh public key from Credhub, while stil targeting the management director and credhub
+    az_ssh_public_key="$(credhub get -n /$DEPLOYMENT_DIRECTOR/$DEPLOYMENT_NAME/az_ssh -k public_key)"
+
     # Instruct the user to finish the 'dev-bosh' setup by following these stems
     bold_green_msg "The Dev (dev) BOSH Director is now ready!\n"
     bold_msg "Please perform the following steps to finish the setup:\n"
     normal_msg "1) Select the new Dev (dev) BOSH Director"
     bold_msg "./bcp/select-director.sh dev-bosh\n"
-    normal_msg "2) Upload the Cloud Config"
-    bold_msg "bosh update-cloud-config cloud-config/dev-bosh/cloud-config.yml\n"
-    normal_msg "3) Update the runtime config to enable BOSH DNS"
+    normal_msg "2) Update the cpi config"
+    bold_msg "az_ssh_public_key="$az_ssh_public_key" \n"
+    bold_msg "./deployments/dev-bosh/cpi-config/update-cpi-config.sh '"$az_ssh_public_key"'\n"
+    normal_msg "3) Upload the Cloud Config"
+    bold_msg "bosh update-cloud-config deployments/dev-bosh/cloud-config/cloud-config.yml\n"
+    normal_msg "4) Update the runtime config to enable BOSH DNS"
     bold_msg "bosh update-runtime-config bcp/clones/bosh-deployment/runtime-configs/dns.yml --name bosh-dns\n\n"
 fi
 

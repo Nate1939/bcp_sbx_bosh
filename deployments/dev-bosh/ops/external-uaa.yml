@@ -11,9 +11,7 @@
 # Target external UAA server
 - path: /instance_groups/name=bosh/properties/director/user_management/uaa?/url
   type: replace
-  # value: "https://172.16.174.184:8443"
   value: "https://bosh-core-services.qa.local:8443"
-  # value: "https://q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
 
 # Public key to verify UAA token when token is encoded with asymmetric encryption'
 - path: /instance_groups/name=bosh/properties/director/user_management/uaa/public_key?
@@ -33,3 +31,13 @@
 - path: /instance_groups/name=bosh/properties/nats/director_account/client_secret?
   type: replace
   value: ((/bcp-sbx-bosh/bcp-sbx-core-services/nats_sync_password))
+
+# nats needs to trust ca certificate of UAA
+- path: /instance_groups/name=bosh/properties/nats/director_account/ca_cert
+  type: replace
+  value: ((/bcp-sbx-bosh/bcp-sbx-core-services/uaa_ssl.ca))
+
+# health monitor needs to trust ca certificate of UAA
+- path: /instance_groups/name=bosh/properties/hm/director_account/ca_cert
+  type: replace
+  value: ((/bcp-sbx-bosh/bcp-sbx-core-services/uaa_ssl.ca))

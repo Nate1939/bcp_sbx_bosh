@@ -48,6 +48,8 @@ instance_groups:
         required: true
         galera: ((galera_server_certificate))
         server: ((mysql_server_certificate))
+        # client:
+        #   ca: ((/bcp-sbx-bosh/dev-bosh/director_ssl.ca))
       engine_config:
         galera:
           enabled: true

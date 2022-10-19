@@ -27,3 +27,5 @@
       enabled: true
       cert:
         ca: ((/bcp-sbx-bosh/bcp-sbx-core-database/mysql_server_certificate.ca))
+        # certificate: ((director_ssl.certificate))
+        # private_key: ((director_ssl.private_key))
