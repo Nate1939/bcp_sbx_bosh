@@ -10,7 +10,6 @@
       secret_access_key: ((/bcp-sbx-bosh/bcp-sbx-core-services/minio_secretkey))
       port: 9000
       host: bosh-core-services.qa.local
-      # host: q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh
     provider: s3
 
 # Remove the blobstore job specified in bosh.yml. It is not needed when using an external blobstore
