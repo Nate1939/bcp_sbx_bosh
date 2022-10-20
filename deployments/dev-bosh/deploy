@@ -58,6 +58,7 @@ bosh -e "$DEPLOYMENT_DIRECTOR" -d "$DEPLOYMENT_NAME" \
     -o "deployments/dev-bosh/ops/external-credhub.yml" \
     -o "deployments/dev-bosh/ops/external-uaa.yml" \
     -o "deployments/dev-bosh/ops/external-blobstore.yml" \
+        -v bucket_name="$DEPLOYMENT_NAME"
     -o "bcp/clones/bosh-deployment/jumpbox-user.yml" \
     -o "bcp/clones/bosh-deployment/misc/trusted-certs.yml" \
         --var-file trusted_ca_cert="deployments/dev-bosh/blobs/dynamic-puzzel-sbx-ca-certs.pem" \

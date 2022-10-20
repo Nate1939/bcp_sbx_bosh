@@ -5,7 +5,7 @@
   type: replace
   value:
     options:
-      bucket_name: 19bf8a2f-49a6-4f84-a313-de9d088af3e5
+      bucket_name: ((bucket_name))
       access_key_id: ((/bcp-sbx-bosh/bcp-sbx-core-services/minio_accesskey))
       secret_access_key: ((/bcp-sbx-bosh/bcp-sbx-core-services/minio_secretkey))
       port: 9000
@@ -23,7 +23,7 @@
     access_key_id: ((/bcp-sbx-bosh/bcp-sbx-core-services/minio_accesskey))
     secret_access_key: ((/bcp-sbx-bosh/bcp-sbx-core-services/minio_secretkey))
     s3_port: 9000
-    bucket_name: 19bf8a2f-49a6-4f84-a313-de9d088af3e5
+    bucket_name: ((bucket_name))
     host: q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh
     provider: s3
 
