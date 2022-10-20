@@ -74,7 +74,7 @@ fi
 #
 if [[ $? -eq 0 ]]; then
 
-    # Create a dummy 'state.json' for use by the select-director.sh script
+    # Create a dummy 'state.json' for use by the select-director script
     printf "{\n"                                    >  "deployments/$DEPLOYMENT_NAME/state.json"
     printf "  \"deployed\": \"true\",\n"            >> "deployments/$DEPLOYMENT_NAME/state.json"
     printf "  \"director\": \"$DEPLOYMENT_DIRECTOR\"\n" >> "deployments/$DEPLOYMENT_NAME/state.json"
@@ -108,7 +108,7 @@ if [[ $? -eq 0 ]]; then
     bold_green_msg "The Dev (dev) BOSH Director is now ready!\n"
     bold_msg "Please perform the following steps to finish the setup:\n"
     normal_msg "1) Select the new Dev (dev) BOSH Director"
-    bold_msg "./bcp/select-director.sh dev-bosh\n"
+    bold_msg "./bcp/select-director dev-bosh\n"
     normal_msg "2) Update the cpi config"
     bold_msg "az_ssh_public_key=$az_ssh_public_key \n"
     bold_msg "./deployments/dev-bosh/cpi-config/update-cpi-config.sh \"\$az_ssh_public_key\"\n"
