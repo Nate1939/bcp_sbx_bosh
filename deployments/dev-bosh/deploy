@@ -48,6 +48,7 @@ check_deployment_and_selected_director
 ##
 # BOSH Deployment Definition
 #
+if ! [[ $# -eq 1 && $1 = "skip_deployment" ]]; then
 bosh -e "$DEPLOYMENT_DIRECTOR" -d "$DEPLOYMENT_NAME" \
     deploy "bcp/clones/bosh-deployment/bosh.yml" \
     -v director_name="$DEPLOYMENT_NAME" \
@@ -66,6 +67,7 @@ bosh -e "$DEPLOYMENT_DIRECTOR" -d "$DEPLOYMENT_NAME" \
         --var-file director_vm_trusted_ca_certs="deployments/dev-bosh/blobs/dynamic-puzzel-sbx-ca-certs.pem" \
     -o "bcp/common-ops/change-deployment-name.yml" \
         -v deployment_name="$DEPLOYMENT_NAME"
+fi
 
 ##
 # Post-deployment activities
@@ -84,6 +86,20 @@ if [[ $? -eq 0 ]]; then
     pushd "deployments/dev-bosh/" > /dev/null
     sync_state_file_to_git "$DEPLOYMENT_NAME" "sync"
     popd > /dev/null
+
+    # Check if the user is logged into CredHub
+    bcpBoshInternalIpVar=$(cat deploy | grep internal_ip)
+    [[ $bcpBoshInternalIpVar =~ \"([0-9.]+)\" ]]
+    BCP_BOSH_IP="${BASH_REMATCH[1]}"
+    credhubServerVersion="$(credhub login --version)"
+    if [[ $(echo "$credhubServerVersion" | grep -cim1 "Server Version: Not Found") -eq 1 ]]; then
+        bold_yellow_msg "\nYou must login to CredHub to be able to retrieve Azure ssh public key, and later update-cpi-config!"
+        bold_yellow_msg "Run the following commands to login to credhub and receive instructions to update cpi- cloud- and runtime-config:\n"
+        normal_msg " credhub api -s https://$BCP_BOSH_IP:8844 --skip-tls-validation"
+        normal_msg " credhub login\n"
+        normal_msg " ./deployments/$DEPLOYMENT_NAME/deploy skip_deployment\n"
+        exit 1
+    fi
 
     # Retrieve Azure ssh public key from Credhub, while stil targeting the management director and credhub
     az_ssh_public_key="$(credhub get -n /$DEPLOYMENT_DIRECTOR/$DEPLOYMENT_NAME/az_ssh -k public_key | awk 'NF {print "\""$0"\""}')"
