@@ -164,7 +164,7 @@ instance_groups:
           internal:
             hostnames:
             - "q-s0y1.core-services.vsphere-default.bcp-sbx-core-services.bosh"
-            - "bosh-core-services.qa.local"
+            - "bosh-core-services.dev.local"
       uaadb:
         address: "q-s3y1.mysql.vsphere-default.bcp-sbx-core-database.bosh"
         databases:
@@ -205,7 +205,7 @@ instance_groups:
           uaa:
             ca_certs:
             - ((uaa_ssl.ca))
-            url: "https://bosh-core-services.qa.local:8443"
+            url: "https://bosh-core-services.dev.local:8443"
             internal_url: "https://q-s0y1.core-services.vsphere-default.bcp-sbx-core-services.bosh:8443"
             verification_key: ((uaa_jwt_signing_key.public_key))
         authorization:
@@ -273,7 +273,7 @@ variables:
   options:
     ca: core_services_ca
     common_name: BCP Core Blobstore
-    alternative_names: [ 172.16.174.184, 172.16.174.185, 172.16.174.186, 172.16.174.187, bosh-core-services.qa.local ]
+    alternative_names: [ 172.16.174.184, 172.16.174.185, 172.16.174.186, 172.16.174.187, bosh-core-services.dev.local ]
   consumes:
     alternative_name:
       from: blobstore-address
@@ -302,7 +302,7 @@ variables:
   options:
     alternative_names:
     - "*.core-services.vsphere-default.bcp-sbx-core-services.bosh"
-    - bosh-core-services.qa.local
+    - bosh-core-services.dev.local
     ca: core_services_ca
     common_name: "uaa_ssl"
   type: certificate
@@ -311,7 +311,7 @@ variables:
   options:
     alternative_names:
     - "*.core-services.vsphere-default.bcp-sbx-core-services.bosh"
-    - bosh-core-services.qa.local
+    - bosh-core-services.dev.local
     ca: core_services_ca
     common_name: uaa_service_provider_ssl
   type: certificate
@@ -321,7 +321,7 @@ variables:
   options:
     alternative_names:
     - "*.core-services.vsphere-default.bcp-sbx-core-services.bosh"
-    - bosh-core-services.qa.local
+    - bosh-core-services.dev.local
     ca: core_services_ca
     common_name: credhub_tls
   type: certificate

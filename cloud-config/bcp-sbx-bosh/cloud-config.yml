@@ -10,8 +10,9 @@ networks:
     cloud_properties:
       name: Puzzel_DS/VMNet 172.16.174.0
     dns:
-    - 172.16.140.18
-    - 172.16.140.20
+    - 172.16.150.11
+    - 172.16.150.12
+    - 172.16.150.13
     gateway: 172.16.174.1
     range: 172.16.174.0/24
     reserved:
