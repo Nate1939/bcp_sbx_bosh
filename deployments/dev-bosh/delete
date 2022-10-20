@@ -16,14 +16,14 @@ cd "$scriptAbsolutePath/../../"
 # bcp Setup
 # Validates the current setup and guides the user if deviations are found
 #
-. ".scripts/setup.sh"
+. "bcp/.scripts/setup.sh"
 
 ##
 # !! DEPLOYMENT METADATA !!
 #    Must be filled out!
 #
-DEPLOYMENT_NAME="sbx-bosh"
-DEPLOYMENT_DIRECTOR="mgmt-bosh"
+DEPLOYMENT_NAME="dev-bosh"
+DEPLOYMENT_DIRECTOR="bcp-sbx-bosh"
 
 echo_deployment_metadata
 
@@ -48,7 +48,7 @@ check_deployment_and_selected_director
 ##
 # BOSH Deployment Deletion Definition
 #
-bosh -e "$TARGET_DIRECTOR" -d "$DEPLOYMENT_NAME" delete-deployment
+bosh -e "$DEPLOYMENT_DIRECTOR" -d "$DEPLOYMENT_NAME" delete-deployment
 
 ##
 # Post-deployment activities
@@ -56,7 +56,9 @@ bosh -e "$TARGET_DIRECTOR" -d "$DEPLOYMENT_NAME" delete-deployment
 if [[ $? -eq 0 ]]; then
 
     # Delete the 'state.json' file from git
+    pushd "deployments/dev-bosh/" > /dev/null
     sync_state_file_to_git "$DEPLOYMENT_NAME" "delete"
+    popd > /dev/null
 
     # Clean-up any remaining files
     rm "deployments/$DEPLOYMENT_NAME/state.json" 2>/dev/null || true
