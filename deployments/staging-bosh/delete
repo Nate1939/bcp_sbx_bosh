@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# executable: deployments/dev-bosh/delete
+# executable: deployments/staging-bosh/delete
 #
 # Delete the Sandbox BOSH Director
 #
@@ -22,7 +22,7 @@ cd "$scriptAbsolutePath/../../"
 # !! DEPLOYMENT METADATA !!
 #    Must be filled out!
 #
-DEPLOYMENT_NAME="dev-bosh"
+DEPLOYMENT_NAME="staging-bosh"
 DEPLOYMENT_DIRECTOR="bcp-sbx-bosh"
 
 echo_deployment_metadata

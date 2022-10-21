@@ -1,0 +1,15 @@
+- type: replace
+  path: /releases/name=os-conf?
+  value:
+    name: "os-conf"
+    version: "22.1.2"
+    url: "https://bosh.io/d/github.com/cloudfoundry/os-conf-release?v=22.1.2"
+    sha1: "386293038ae3d00813eaa475b4acf63f8da226ef"
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: ca_certs
+    release: os-conf
+    properties:
+      certs: ((director_vm_trusted_ca_certs))

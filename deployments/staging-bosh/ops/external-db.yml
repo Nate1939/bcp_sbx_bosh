@@ -1,0 +1,31 @@
+---
+- type: remove
+  path: /instance_groups/name=bosh/jobs/name=postgres-10?
+
+- type: remove
+  path: /instance_groups/name=bosh/jobs/name=postgres-9.4?
+
+- type: remove
+  path: /instance_groups/name=bosh/jobs/name=postgres?
+
+- type: remove
+  path: /instance_groups/name=bosh/properties/postgres
+
+- type: remove
+  path: /variables/name=postgres_password
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/db
+  value:
+    host: "q-s3y1.mysql.vsphere-default.bcp-sbx-core-database.bosh"
+    port: 3306
+    user: stagingbosh-db-user
+    password: ((/bcp-sbx-bosh/bcp-sbx-core-database/stagingbosh-db-pwd))
+    adapter: mysql2
+    database: stagingbosh
+    tls:
+      enabled: true
+      cert:
+        ca: ((/bcp-sbx-bosh/bcp-sbx-core-database/mysql_server_certificate.ca))
+        # certificate: ((director_ssl.certificate))
+        # private_key: ((director_ssl.private_key))

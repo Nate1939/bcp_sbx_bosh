@@ -78,9 +78,15 @@ if [[ $? -eq 0 ]]; then
         fi
 
         # Create and populate dynamic-puzzel-sbx-ca-certs.pem with root certificates to be trusted
-        cat bcp/blobs/puzzel-qa-ca-certs.pem > deployments/dev-bosh/blobs/dynamic-puzzel-sbx-ca-certs.pem
-        printf "\n" >> deployments/dev-bosh/blobs/dynamic-puzzel-sbx-ca-certs.pem
-        credhub get -n /$DEPLOYMENT_DIRECTOR/$DEPLOYMENT_NAME/core_services_ca -k ca | sed -e :a -e '/^\n*$/{$d;N;};/\n$/ba' >> deployments/dev-bosh/blobs/dynamic-puzzel-sbx-ca-certs.pem
+        pushd "deployments" > /dev/null
+        for d in *; do
+            if [[ $d =~ -bosh ]]; then
+                cat ../bcp/blobs/puzzel-qa-ca-certs.pem > $d/blobs/dynamic-puzzel-sbx-ca-certs.pem
+                printf "\n" >> $d/blobs/dynamic-puzzel-sbx-ca-certs.pem
+                credhub get -n /$DEPLOYMENT_DIRECTOR/$DEPLOYMENT_NAME/core_services_ca -k ca | sed -e :a -e '/^\n*$/{$d;N;};/\n$/ba' >> $d/blobs/dynamic-puzzel-sbx-ca-certs.pem
+            fi
+        done
+        popd > /dev/null
 fi
 
 ##

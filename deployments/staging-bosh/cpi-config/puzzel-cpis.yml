@@ -1,0 +1,13 @@
+---
+cpis:
+- name: azure-uks-qa
+  type: azure
+  properties:
+    environment: ((az_uks_qa_environment))
+    subscription_id: ((az_uks_qa_subscription_id))
+    tenant_id: ((az_uks_qa_tenant_id))
+    client_id: ((az_uks_qa_client_id))
+    client_secret: ((az_uks_qa_client_secret))
+    resource_group_name: ((az_uks_qa_resource_group_name))
+    ssh_public_key: ((az_uks_qa_ssh_public_key))
+    use_managed_disks: ((az_uks_qa_use_managed_disks))

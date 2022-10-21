@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# executable: deployments/dev-bosh/deploy
+# executable: deployments/staging-bosh/deploy
 #
-# Deploy the Dev BOSH Director
+# Deploy the Staging BOSH Director
 #
 set -euo pipefail
 
@@ -22,7 +22,7 @@ cd "$scriptAbsolutePath/../../"
 # !! DEPLOYMENT METADATA !!
 #    Must be filled out!
 #
-DEPLOYMENT_NAME="dev-bosh"
+DEPLOYMENT_NAME="staging-bosh"
 DEPLOYMENT_DIRECTOR="bcp-sbx-bosh"
 
 echo_deployment_metadata
@@ -104,10 +104,10 @@ if [[ $? -eq 0 ]]; then
     # Retrieve Azure ssh public key from Credhub, while stil targeting the management director and credhub
     az_ssh_public_key="$(credhub get -n /$DEPLOYMENT_DIRECTOR/$DEPLOYMENT_NAME/az_ssh -k public_key | awk 'NF {print "\""$0"\""}')"
 
-    # Instruct the user to finish the 'dev-bosh' setup by following these stems
-    bold_green_msg "The Dev (dev) BOSH Director is now ready!\n"
+    # Instruct the user to finish the 'staging-bosh' setup by following these stems
+    bold_green_msg "The Staging (stag) BOSH Director is now ready!\n"
     bold_msg "Please perform the following steps to finish the setup:\n"
-    normal_msg "1) Select the new Dev (dev) BOSH Director"
+    normal_msg "1) Select the new Staging (stag) BOSH Director"
     bold_msg "./bcp/select-director $DEPLOYMENT_NAME\n"
     normal_msg "2) Update the cpi config"
     bold_msg "az_ssh_public_key=$az_ssh_public_key \n"

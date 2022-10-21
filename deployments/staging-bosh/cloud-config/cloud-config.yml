@@ -1,0 +1,738 @@
+azs:
+  - cloud_properties:
+      availability_zone: "1"
+    cpi: azure-uks-qa
+    name: azure-uks-qa-1
+  - cloud_properties:
+      availability_zone: "2"
+    cpi: azure-uks-qa
+    name: azure-uks-qa-2
+  - cloud_properties:
+      availability_zone: "3"
+    cpi: azure-uks-qa
+    name: azure-uks-qa-3
+compilation:
+  az: azure-uks-qa-1
+  network: azure-uks-qa-stag-compile
+  reuse_compilation_vms: true
+  vm_type: large
+  workers: 3
+disk_types:
+  - cloud_properties:
+      caching: ReadOnly
+      storage_account_type: Premium_LRS
+    disk_size: 40960
+    name: cs.premium
+  - cloud_properties:
+      caching: ReadOnly
+      storage_account_type: Premium_LRS
+    disk_size: 614400
+    name: sql.data
+  - cloud_properties:
+      caching: ReadOnly
+      storage_account_type: Premium_LRS
+    disk_size: 131072
+    name: sql.data.small
+  - cloud_properties:
+      caching: ReadOnly
+      storage_account_type: Premium_LRS
+    disk_size: 262144
+    name: sql.data.medium
+  - cloud_properties:
+      storage_account_type: Premium_LRS
+    disk_size: 61440
+    name: sql.logs
+  - cloud_properties:
+      storage_account_type: Premium_LRS
+    disk_size: 30720
+    name: sql.logs.small
+  - cloud_properties:
+      storage_account_type: Standard_LRS
+    disk_size: 512000
+    name: ma.archive.large
+  - cloud_properties:
+      storage_account_type: Standard_LRS
+    disk_size: 40960
+    name: logs.small
+networks:
+  - name: azure-uks-qa-stag-compile
+    subnets:
+    - azs:
+      - azure-uks-qa-1
+      - azure-uks-qa-2
+      - azure-uks-qa-3
+      cloud_properties:
+        resource_group_name: network-stag-uks-rg
+        subnet_name: boshcompilesubnet
+        virtual_network_name: appintnet-stag-uks-vnet
+      dns:
+      - 10.5.184.14
+      - 172.16.150.11
+      - 172.16.150.12
+      - 172.16.150.13
+      gateway: 10.7.179.65
+      range: 10.7.179.64/29
+      reserved:
+      - 10.7.179.66-10.7.179.67
+    type: manual
+  - name: azure-uks-qa-stag-app
+    subnets:
+    - azs:
+      - azure-uks-qa-1
+      - azure-uks-qa-2
+      - azure-uks-qa-3
+      cloud_properties:
+        resource_group_name: network-stag-uks-rg
+        subnet_name: appsubnet01
+        virtual_network_name: appintnet-stag-uks-vnet
+      dns:
+      - 10.5.184.14
+      - 172.16.150.11
+      - 172.16.150.12
+      - 172.16.150.13
+      gateway: 10.7.179.1
+      range: 10.7.179.0/27
+      reserved:
+      - 10.7.179.2-10.7.179.3
+    type: manual
+  - name: azure-uks-qa-stag-endpoint
+    subnets:
+    - azs:
+      - azure-uks-qa-1
+      - azure-uks-qa-2
+      - azure-uks-qa-3
+      cloud_properties:
+        resource_group_name: network-stag-uks-rg
+        subnet_name: endpointsubnet01
+        virtual_network_name: appintnet-stag-uks-vnet
+      dns:
+      - 10.5.184.14
+      - 172.16.150.11
+      - 172.16.150.12
+      - 172.16.150.13
+      gateway: 10.7.179.33
+      range: 10.7.179.32/27
+      reserved:
+      - 10.7.179.34-10.7.179.35
+    type: manual
+  - name: azure-uks-qa-stag-backend
+    subnets:
+    - azs:
+      - azure-uks-qa-1
+      - azure-uks-qa-2
+      - azure-uks-qa-3
+      cloud_properties:
+        resource_group_name: network-stag-uks-rg
+        subnet_name: backends-subnet
+        virtual_network_name: backendsnet-stag-uks-vnet
+      dns:
+      - 10.5.184.14
+      - 172.16.150.11
+      - 172.16.150.12
+      - 172.16.150.13
+      gateway: 10.7.180.1
+      range: 10.7.180.0/25
+      reserved:
+      - 10.7.180.2-10.7.180.3
+    type: manual
+  - name: azure-uks-qa-stag-tm
+    subnets:
+    - azs:
+      - azure-uks-qa-1
+      - azure-uks-qa-2
+      - azure-uks-qa-3
+      cloud_properties:
+        resource_group_name: network-stag-uks-rg
+        subnet_name: tm-subnet
+        virtual_network_name: backendsnet-stag-uks-vnet
+      dns:
+      - 10.5.184.14
+      - 172.16.150.11
+      - 172.16.150.12
+      - 172.16.150.13
+      gateway: 10.7.180.129
+      range: 10.7.180.128/26
+      reserved:
+      - 10.7.180.130-10.7.180.131
+      static:
+      - 10.7.180.132-10.7.180.185
+    type: manual
+  - name: azure-uks-qa-stag-dmz-admin
+    subnets:
+    - azs:
+      - azure-uks-qa-1
+      - azure-uks-qa-2
+      - azure-uks-qa-3
+      cloud_properties:
+        resource_group_name: network-stag-uks-rg
+        subnet_name: dmz-subnet
+        virtual_network_name: dmznet-stag-uks-vnet
+      dns:
+      - 10.5.184.14
+      - 172.16.150.11
+      - 172.16.150.12
+      - 172.16.150.13
+      gateway: 10.7.181.129
+      range: 10.7.181.128/25
+      reserved:
+      - 10.7.181.130-10.7.181.131
+      - 10.7.181.141-10.7.181.255
+    type: manual
+  - name: azure-uks-qa-stag-dmz-agent
+    subnets:
+    - azs:
+      - azure-uks-qa-1
+      - azure-uks-qa-2
+      - azure-uks-qa-3
+      cloud_properties:
+        resource_group_name: network-stag-uks-rg
+        subnet_name: dmz-subnet
+        virtual_network_name: dmznet-stag-uks-vnet
+      dns:
+      - 10.5.184.14
+      - 172.16.150.11
+      - 172.16.150.12
+      - 172.16.150.13
+      gateway: 10.7.181.129
+      range: 10.7.181.128/25
+      reserved:
+      - 10.7.181.130-10.7.181.140
+      - 10.7.181.152-10.7.181.255
+    type: manual
+  - name: azure-uks-qa-stag-dmz-trigger
+    subnets:
+    - azs:
+      - azure-uks-qa-1
+      - azure-uks-qa-2
+      - azure-uks-qa-3
+      cloud_properties:
+        resource_group_name: network-stag-uks-rg
+        subnet_name: dmz-subnet
+        virtual_network_name: dmznet-stag-uks-vnet
+      dns:
+      - 10.5.184.14
+      - 172.16.150.11
+      - 172.16.150.12
+      - 172.16.150.13
+      gateway: 10.7.181.129
+      range: 10.7.181.128/25
+      reserved:
+      - 10.7.181.130-10.7.181.151
+      - 10.7.181.163-10.7.181.255
+    type: manual
+  - name: azure-uks-qa-stag-dmz-sms
+    subnets:
+    - azs:
+      - azure-uks-qa-1
+      - azure-uks-qa-2
+      - azure-uks-qa-3
+      cloud_properties:
+        resource_group_name: network-stag-uks-rg
+        subnet_name: dmz-subnet
+        virtual_network_name: dmznet-stag-uks-vnet
+      dns:
+      - 10.5.184.14
+      - 172.16.150.11
+      - 172.16.150.12
+      - 172.16.150.13
+      gateway: 10.7.181.129
+      range: 10.7.181.128/25
+      reserved:
+      - 10.7.181.130-10.7.181.162
+      - 10.7.181.174-10.7.181.255
+    type: manual
+  - name: azure-uks-qa-stag-dmz-ftp
+    subnets:
+    - azs:
+      - azure-uks-qa-1
+      - azure-uks-qa-2
+      - azure-uks-qa-3
+      cloud_properties:
+        resource_group_name: network-stag-uks-rg
+        subnet_name: dmz-subnet
+        virtual_network_name: dmznet-stag-uks-vnet
+      dns:
+      - 10.5.184.14
+      - 172.16.150.11
+      - 172.16.150.12
+      - 172.16.150.13
+      gateway: 10.7.181.129
+      range: 10.7.181.128/25
+      reserved:
+      - 10.7.181.130-10.7.181.173
+      - 10.7.181.185-10.7.181.255
+    type: manual
+  - name: azure-uks-qa-stag-mshare
+    subnets:
+    - azs:
+      - azure-uks-qa-1
+      - azure-uks-qa-2
+      - azure-uks-qa-3
+      cloud_properties:
+        resource_group_name: network-stag-uks-rg
+        subnet_name: msharenet-subnet
+        virtual_network_name: msharenet-stag-uks-vnet
+      dns:
+      - 10.5.184.14
+      - 172.16.150.11
+      - 172.16.150.12
+      - 172.16.150.13
+      gateway: 10.7.177.1
+      range: 10.7.177.0/26
+      reserved:
+      - 10.7.177.2-10.7.177.3
+    type: manual
+  # - name: azure-uks-prod-app
+  #   subnets:
+  #   - azs:
+  #     - azure-uks-prod-1
+  #     - azure-uks-prod-2
+  #     - azure-uks-prod-3
+  #     cloud_properties:
+  #       resource_group_name: network-prod-uks-rg
+  #       subnet_name: appsubnet01
+  #       virtual_network_name: appintnet-prod-uks-vnet
+  #     dns:
+  #     - 10.47.28.18
+  #     - 10.47.28.16
+  #     - 10.47.28.17
+  #     gateway: 10.7.160.1
+  #     range: 10.7.160.0/27
+  #     reserved:
+  #     - 10.7.160.2-10.7.160.3
+  #   type: manual
+  # - name: azure-uks-prod-endpoint
+  #   subnets:
+  #   - azs:
+  #     - azure-uks-prod-1
+  #     - azure-uks-prod-2
+  #     - azure-uks-prod-3
+  #     cloud_properties:
+  #       resource_group_name: network-prod-uks-rg
+  #       subnet_name: endpointsubnet01
+  #       virtual_network_name: appintnet-prod-uks-vnet
+  #     dns:
+  #     - 10.47.28.18
+  #     - 10.47.28.16
+  #     - 10.47.28.17
+  #     gateway: 10.7.160.33
+  #     range: 10.7.160.32/27
+  #     reserved:
+  #     - 10.7.160.34-10.7.160.35
+  #   type: manual
+  # - name: azure-uks-prod-backends-app
+  #   subnets:
+  #   - azs:
+  #     - azure-uks-prod-1
+  #     - azure-uks-prod-2
+  #     - azure-uks-prod-3
+  #     cloud_properties:
+  #       resource_group_name: network-prod-uks-rg
+  #       subnet_name: backends-subnet
+  #       virtual_network_name: backendsnet-prod-uks-vnet
+  #     dns:
+  #     - 10.47.28.18
+  #     - 10.47.28.16
+  #     - 10.47.28.17
+  #     gateway: 10.7.20.1
+  #     range: 10.7.20.0/24
+  #     reserved:
+  #     - 10.7.20.2-10.7.20.26
+  #     - 10.7.20.38-10.7.20.255
+  #   type: manual
+  # - name: azure-uks-prod-backends-dbcore
+  #   subnets:
+  #   - azs:
+  #     - azure-uks-prod-1
+  #     - azure-uks-prod-2
+  #     - azure-uks-prod-3
+  #     cloud_properties:
+  #       resource_group_name: network-prod-uks-rg
+  #       subnet_name: backends-subnet
+  #       virtual_network_name: backendsnet-prod-uks-vnet
+  #     dns:
+  #     - 10.47.28.18
+  #     - 10.47.28.16
+  #     - 10.47.28.17
+  #     gateway: 10.7.20.1
+  #     range: 10.7.20.0/24
+  #     reserved:
+  #     - 10.7.20.2-10.7.20.4
+  #     - 10.7.20.16-10.7.20.255
+  #     static:
+  #     - 10.7.20.13-10.7.20.15
+  #   type: manual
+  # - name: azure-uks-prod-backends-dbstat
+  #   subnets:
+  #   - azs:
+  #     - azure-uks-prod-1
+  #     - azure-uks-prod-2
+  #     - azure-uks-prod-3
+  #     cloud_properties:
+  #       resource_group_name: network-prod-uks-rg
+  #       subnet_name: backends-subnet
+  #       virtual_network_name: backendsnet-prod-uks-vnet
+  #     dns:
+  #     - 10.47.28.18
+  #     - 10.47.28.16
+  #     - 10.47.28.17
+  #     gateway: 10.7.20.1
+  #     range: 10.7.20.0/24
+  #     reserved:
+  #     - 10.7.20.2-10.7.20.15
+  #     - 10.7.20.27-10.7.20.255
+  #   type: manual
+  # - name: azure-uks-prod-backends-ma
+  #   subnets:
+  #   - azs:
+  #     - azure-uks-prod-1
+  #     - azure-uks-prod-2
+  #     - azure-uks-prod-3
+  #     cloud_properties:
+  #       resource_group_name: network-prod-uks-rg
+  #       subnet_name: backends-subnet
+  #       virtual_network_name: backendsnet-prod-uks-vnet
+  #     dns:
+  #     - 10.47.28.18
+  #     - 10.47.28.16
+  #     - 10.47.28.17
+  #     gateway: 10.7.20.1
+  #     range: 10.7.20.0/24
+  #     reserved:
+  #     - 10.7.20.2-10.7.20.37
+  #     - 10.7.20.45-10.7.20.255
+  #   type: manual
+  # - name: azure-uks-prod-backends-sdl
+  #   subnets:
+  #   - azs:
+  #     - azure-uks-prod-1
+  #     - azure-uks-prod-2
+  #     - azure-uks-prod-3
+  #     cloud_properties:
+  #       resource_group_name: network-prod-uks-rg
+  #       subnet_name: backends-subnet
+  #       virtual_network_name: backendsnet-prod-uks-vnet
+  #     dns:
+  #     - 10.47.28.18
+  #     - 10.47.28.16
+  #     - 10.47.28.17
+  #     gateway: 10.7.20.1
+  #     range: 10.7.20.0/24
+  #     reserved:
+  #     - 10.7.20.2-10.7.20.44
+  #     - 10.7.20.49-10.7.20.255
+  #     static:
+  #     - 10.7.20.45-10.7.20.48
+  #   type: manual
+  # - name: azure-uks-prod-backends-rps
+  #   subnets:
+  #   - azs:
+  #     - azure-uks-prod-1
+  #     - azure-uks-prod-2
+  #     - azure-uks-prod-3
+  #     cloud_properties:
+  #       resource_group_name: network-prod-uks-rg
+  #       subnet_name: backends-subnet
+  #       virtual_network_name: backendsnet-prod-uks-vnet
+  #     dns:
+  #     - 10.47.28.18
+  #     - 10.47.28.16
+  #     - 10.47.28.17
+  #     gateway: 10.7.20.1
+  #     range: 10.7.20.0/24
+  #     reserved:
+  #     - 10.7.20.2-10.7.20.48
+  #     - 10.7.20.60-10.7.20.255
+  #   type: manual
+  # - name: azure-uks-prod-tm
+  #   subnets:
+  #   - azs:
+  #     - azure-uks-prod-1
+  #     - azure-uks-prod-2
+  #     - azure-uks-prod-3
+  #     cloud_properties:
+  #       resource_group_name: network-prod-uks-rg
+  #       subnet_name: backends-TM-subnet
+  #       virtual_network_name: backendsnet-prod-uks-vnet
+  #     dns:
+  #     - 10.47.28.18
+  #     - 10.47.28.16
+  #     - 10.47.28.17
+  #     gateway: 10.7.21.1
+  #     range: 10.7.21.0/24
+  #     reserved:
+  #     - 10.7.21.2-10.7.21.3
+  #     static:
+  #     - 10.7.21.4-10.7.21.250
+  #   type: manual
+  # - name: azure-uks-prod-dmz-admin
+  #   subnets:
+  #   - azs:
+  #     - azure-uks-prod-1
+  #     - azure-uks-prod-2
+  #     - azure-uks-prod-3
+  #     cloud_properties:
+  #       resource_group_name: network-prod-uks-rg
+  #       subnet_name: dmz-subnet01
+  #       virtual_network_name: dmznet-prod-uks-vnet
+  #     dns:
+  #     - 10.47.28.18
+  #     - 10.47.28.16
+  #     - 10.47.28.17
+  #     gateway: 10.7.32.1
+  #     range: 10.7.32.0/24
+  #     reserved:
+  #     - 10.7.32.2-10.7.32.4
+  #     - 10.7.32.16-10.7.32.255
+  #   type: manual
+  # - name: azure-uks-prod-dmz-agent
+  #   subnets:
+  #   - azs:
+  #     - azure-uks-prod-1
+  #     - azure-uks-prod-2
+  #     - azure-uks-prod-3
+  #     cloud_properties:
+  #       resource_group_name: network-prod-uks-rg
+  #       subnet_name: dmz-subnet01
+  #       virtual_network_name: dmznet-prod-uks-vnet
+  #     dns:
+  #     - 10.47.28.18
+  #     - 10.47.28.16
+  #     - 10.47.28.17
+  #     gateway: 10.7.32.1
+  #     range: 10.7.32.0/24
+  #     reserved:
+  #     - 10.7.32.2-10.7.32.15
+  #     - 10.7.32.27-10.7.32.255
+  #   type: manual
+  # - name: azure-uks-prod-dmz-trigger
+  #   subnets:
+  #   - azs:
+  #     - azure-uks-prod-1
+  #     - azure-uks-prod-2
+  #     - azure-uks-prod-3
+  #     cloud_properties:
+  #       resource_group_name: network-prod-uks-rg
+  #       subnet_name: dmz-subnet01
+  #       virtual_network_name: dmznet-prod-uks-vnet
+  #     dns:
+  #     - 10.47.28.18
+  #     - 10.47.28.16
+  #     - 10.47.28.17
+  #     gateway: 10.7.32.1
+  #     range: 10.7.32.0/24
+  #     reserved:
+  #     - 10.7.32.2-10.7.32.26
+  #     - 10.7.32.38-10.7.32.255
+  #   type: manual
+  # - name: azure-uks-prod-dmz-sms
+  #   subnets:
+  #   - azs:
+  #     - azure-uks-prod-1
+  #     - azure-uks-prod-2
+  #     - azure-uks-prod-3
+  #     cloud_properties:
+  #       resource_group_name: network-prod-uks-rg
+  #       subnet_name: dmz-subnet01
+  #       virtual_network_name: dmznet-prod-uks-vnet
+  #     dns:
+  #     - 10.47.28.18
+  #     - 10.47.28.16
+  #     - 10.47.28.17
+  #     gateway: 10.7.32.1
+  #     range: 10.7.32.0/24
+  #     reserved:
+  #     - 10.7.32.2-10.7.32.37
+  #     - 10.7.32.49-10.7.32.255
+  #   type: manual
+  # - name: azure-uks-prod-dmz-ftp
+  #   subnets:
+  #   - azs:
+  #     - azure-uks-prod-1
+  #     - azure-uks-prod-2
+  #     - azure-uks-prod-3
+  #     cloud_properties:
+  #       resource_group_name: network-prod-uks-rg
+  #       subnet_name: dmz-subnet01
+  #       virtual_network_name: dmznet-prod-uks-vnet
+  #     dns:
+  #     - 10.47.28.18
+  #     - 10.47.28.16
+  #     - 10.47.28.17
+  #     gateway: 10.7.32.1
+  #     range: 10.7.32.0/24
+  #     reserved:
+  #     - 10.7.32.2-10.7.32.48
+  #     - 10.7.32.60-10.7.32.255
+  #   type: manual
+  # - name: azure-uks-prod-dmz-cdn
+  #   subnets:
+  #   - azs:
+  #     - azure-uks-prod-1
+  #     - azure-uks-prod-2
+  #     - azure-uks-prod-3
+  #     cloud_properties:
+  #       resource_group_name: network-prod-uks-rg
+  #       subnet_name: dmz-subnet01
+  #       virtual_network_name: dmznet-prod-uks-vnet
+  #     dns:
+  #     - 10.47.28.18
+  #     - 10.47.28.16
+  #     - 10.47.28.17
+  #     gateway: 10.7.32.1
+  #     range: 10.7.32.0/24
+  #     reserved:
+  #     - 10.7.32.2-10.7.32.59
+  #     - 10.7.32.71-10.7.32.255
+  #   type: manual
+vm_types:
+  - cloud_properties:
+      cpu: 1
+      disk: 10240
+      ephemeral_disk:
+        size: 30720
+        use_root_disk: false
+      instance_type: Standard_A1_v2
+      ram: 1024
+      root_disk:
+        size: 5120
+    name: small
+  - cloud_properties:
+      cpu: 2
+      disk: 10240
+      ephemeral_disk:
+        size: 30720
+        use_root_disk: false
+      instance_type: Standard_A2_v2
+      ram: 1024
+      root_disk:
+        size: 5120
+    name: small.cpu
+  - cloud_properties:
+      cpu: 1
+      disk: 10240
+      ephemeral_disk:
+        size: 30720
+        use_root_disk: false
+      instance_type: Standard_A1_v2
+      ram: 2048
+      root_disk:
+        size: 5120
+    name: small.ram
+  - cloud_properties:
+      cpu: 1
+      disk: 20480
+      ram: 1024
+    name: small.disk
+  - cloud_properties:
+      cpu: 2
+      disk: 20480
+      ephemeral_disk:
+        size: 30720
+        use_root_disk: false
+      instance_type: Standard_D2s_v5
+      ram: 2048
+      root_disk:
+        size: 5120
+    name: medium
+  - cloud_properties:
+      cpu: 2
+      disk: 20480
+      instance_type: Standard_D2s_v5
+      ram: 2048
+      root_disk:
+        size: 5120
+    name: notemp.small
+  - cloud_properties:
+      cpu: 4
+      disk: 20480
+      ephemeral_disk:
+        size: 30720
+        use_root_disk: false
+      instance_type: Standard_D4s_v5
+      ram: 2048
+      root_disk:
+        size: 5120
+    name: medium.cpu
+  - cloud_properties:
+      cpu: 2
+      disk: 20480
+      ram: 4096
+    name: medium.ram
+  - cloud_properties:
+      cpu: 2
+      disk: 40960
+      ram: 2048
+    name: medium.disk
+  - cloud_properties:
+      cpu: 4
+      disk: 40960
+      ephemeral_disk:
+        size: 30720
+        use_root_disk: false
+      instance_type: Standard_D4s_v5
+      ram: 4096
+      root_disk:
+        size: 5120
+    name: large
+  - cloud_properties:
+      cpu: 4
+      disk: 40960
+      instance_type: Standard_D4s_v5
+      ram: 4096
+      root_disk:
+        size: 5120
+    name: notemp.medium
+  - cloud_properties:
+      cpu: 6
+      disk: 40960
+      ephemeral_disk:
+        size: 30720
+        use_root_disk: false
+      instance_type: Standard_D8s_v5
+      ram: 4096
+      root_disk:
+        size: 5120
+    name: large.cpu
+  - cloud_properties:
+      cpu: 6
+      disk: 40960
+      instance_type: Standard_D8s_v5
+      ram: 4096
+      root_disk:
+        size: 5120
+    name: notemp.large
+  - cloud_properties:
+      cpu: 6
+      disk: 40960
+      instance_type: Standard_E2s_v5
+      ram: 4096
+      root_disk:
+        size: 5120
+    name: notemp.small.ram
+  - cloud_properties:
+      cpu: 6
+      disk: 40960
+      instance_type: Standard_E4s_v5
+      ram: 4096
+      root_disk:
+        size: 5120
+    name: notemp.medium.ram
+  - cloud_properties:
+      cpu: 6
+      disk: 40960
+      instance_type: Standard_E8s_v5
+      ram: 4096
+      root_disk:
+        size: 5120
+    name: notemp.large.ram
+  - cloud_properties:
+      cpu: 4
+      disk: 40960
+      ram: 6144
+    name: large.ram
+  - cloud_properties:
+      cpu: 4
+      disk: 81920
+      ram: 4096
+    name: large.disk

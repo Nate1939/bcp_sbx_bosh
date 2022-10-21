@@ -1,0 +1,48 @@
+---
+# Update bosh.yml file
+# Update BOSH agent properties
+- path: /instance_groups/name=bosh/properties/agent/env/bosh/blobstores/0
+  type: replace
+  value:
+    options:
+      bucket_name: ((bucket_name))
+      access_key_id: ((/bcp-sbx-bosh/bcp-sbx-core-services/minio_accesskey))
+      secret_access_key: ((/bcp-sbx-bosh/bcp-sbx-core-services/minio_secretkey))
+      port: 9000
+      host: bosh-core-services.dev.local
+    provider: s3
+
+# Remove the blobstore job specified in bosh.yml. It is not needed when using an external blobstore
+- path: /instance_groups/name=bosh/jobs/name=blobstore
+  type: remove
+
+# Update blobstore properties needed by the azure_cpi and director jobs
+- path: /instance_groups/name=bosh/properties/blobstore
+  type: replace
+  value:
+    access_key_id: ((/bcp-sbx-bosh/bcp-sbx-core-services/minio_accesskey))
+    secret_access_key: ((/bcp-sbx-bosh/bcp-sbx-core-services/minio_secretkey))
+    s3_port: 9000
+    bucket_name: ((bucket_name))
+    host: q-s3y1.core-services.vsphere-default.bcp-sbx-core-services.bosh
+    provider: s3
+
+# Extra blobstore properties specific to azure_cpi when using external s3 blobstore
+- path: /instance_groups/name=bosh/properties/agent/blobstore?
+  type: replace
+  value:
+    secret_access_key: ((/bcp-sbx-bosh/bcp-sbx-core-services/minio_secretkey))
+    access_key_id: ((/bcp-sbx-bosh/bcp-sbx-core-services/minio_accesskey))
+
+# Remove blobstore variables that aren't neccessary when using an external s3 blobstore
+- type: remove
+  path: /variables/name=blobstore_ca?
+
+- type: remove
+  path: /variables/name=blobstore_server_tls?
+
+- type: remove
+  path: /variables/name=blobstore_director_password?
+
+- type: remove
+  path: /variables/name=blobstore_agent_password?
