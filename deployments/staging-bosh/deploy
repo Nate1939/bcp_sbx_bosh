@@ -52,7 +52,7 @@ if ! [[ $# -eq 1 && $1 = "skip_deployment" ]]; then
 bosh -e "$DEPLOYMENT_DIRECTOR" -d "$DEPLOYMENT_NAME" \
     deploy "bcp/clones/bosh-deployment/bosh.yml" \
     -v director_name="$DEPLOYMENT_NAME" \
-    -v internal_ip="172.16.174.190" \
+    -v internal_ip="172.16.174.191" \
     -o "ops/add-azure-cpi.yml" \
     -o "deployments/$DEPLOYMENT_NAME/ops/modify-for-deployment-by-bosh.yml" \
     -o "deployments/$DEPLOYMENT_NAME/ops/external-db.yml" \
