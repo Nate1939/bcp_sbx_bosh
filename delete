@@ -69,7 +69,6 @@ bosh -e "$BCP_SELECTED_DIRECTOR" delete-env "bcp/clones/bosh-deployment/bosh.yml
         -v vcenter_disks="$DEPLOYMENT_NAME-disks" \
     -o "bcp/clones/bosh-deployment/misc/ntp.yml" \
         -v internal_ntp='["d1dc01.dev.local", "d1dc02.dev.local", "d1dc03.dev.local"]' \
-    -o ops/add-azure-cpi.yml \
     -o "bcp/clones/bosh-deployment/uaa.yml" \
     -o "bcp/clones/bosh-deployment/credhub.yml" \
     -o "bcp/clones/bosh-deployment/jumpbox-user.yml" \

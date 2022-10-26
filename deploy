@@ -101,7 +101,7 @@ if [[ $? -eq 0 ]]; then
     sync_state_file_to_git "$DEPLOYMENT_NAME" "sync"
 
     # Connect to the deployed BOSH Director
-    connect_to_bosh $DEPLOYMENT_NAME
+    connect_to_bosh "172.16.174.180"
 
     # Upload the Cloud Config to be used by all deployments made by this BOSH Director
     bosh -n update-cloud-config "cloud-config/$DEPLOYMENT_NAME/cloud-config.yml"
