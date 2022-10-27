@@ -3,14 +3,15 @@
 set -euo pipefail
 
 AZURE_REGION_ENV="azure-uks-qa"
+AZURE_KV="bosh-prod-uks-kv"
 
 bosh -e $BCP_SELECTED_DIRECTOR update-cpi-config --no-redact deployments/$BCP_SELECTED_DIRECTOR/cpi-config/puzzel-cpis.yml \
     -v az_uks_qa_environment="AzureCloud" \
-    -v az_uks_qa_subscription_id="$(az keyvault secret show --vault-name "bosh-prod-uks-kv" --name "$AZURE_REGION_ENV-subsription-id" --query "value" -o tsv)" \
-    -v az_uks_qa_tenant_id="$(az keyvault secret show --vault-name "bosh-prod-uks-kv" --name "$AZURE_REGION_ENV-tenant-id" --query "value" -o tsv)" \
-    -v az_uks_qa_client_id="$(az keyvault secret show --vault-name "bosh-prod-uks-kv" --name "$AZURE_REGION_ENV-client-id" --query "value" -o tsv)" \
-    -v az_uks_qa_client_secret="$(az keyvault secret show --vault-name "bosh-prod-uks-kv" --name "$AZURE_REGION_ENV-client-secret" --query "value" -o tsv)" \
-    -v az_uks_qa_resource_group_name="bcp-bosh-dev-euw-rg" \
+    -v az_uks_qa_subscription_id="$(az keyvault secret show --vault-name "$AZURE_KV" --name "$AZURE_REGION_ENV-subsription-id" --query "value" -o tsv)" \
+    -v az_uks_qa_tenant_id="$(az keyvault secret show --vault-name "$AZURE_KV" --name "$AZURE_REGION_ENV-tenant-id" --query "value" -o tsv)" \
+    -v az_uks_qa_client_id="$(az keyvault secret show --vault-name "$AZURE_KV" --name "$AZURE_REGION_ENV-client-id" --query "value" -o tsv)" \
+    -v az_uks_qa_client_secret="$(az keyvault secret show --vault-name "$AZURE_KV" --name "$AZURE_REGION_ENV-client-secret" --query "value" -o tsv)" \
+    -v az_uks_qa_resource_group_name="bcp-bosh-qa-uks-rg" \
     -v az_uks_qa_use_managed_disks="true" \
     -v az_uks_qa_ssh_public_key="$1"
 

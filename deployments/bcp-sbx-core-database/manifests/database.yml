@@ -36,7 +36,7 @@ instance_groups:
   - name: vsphere-default
   vm_type: large
   stemcell: default
-  persistent_disk: 10000
+  persistent_disk: 30000
   jobs:
   - name: pxc-mysql
     release: pxc
