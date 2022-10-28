@@ -21,11 +21,11 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Deployment
 
-Please see our [Deployments](docs/deployments.md) page on how to deploy the BOSH Control Plane (BCP) from scratch.
+Please see our [Deployment](docs/deployment.md) page on how to deploy the BOSH Control Plane (BCP) from scratch.
 
 ## Deletion
 
-Please see our [Deletion](docs/deployments.md) page on how to delete the BCP.
+Please see our [Deletion](docs/deletion.md) page on how to delete the BCP.
 
 ## Backup & Recovery
 
