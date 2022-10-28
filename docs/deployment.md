@@ -4,9 +4,7 @@ This page goes through the steps to deploy the BCP from scratch. Go back to the 
 
 ## Process
 
-1. **Create the management BOSH director**  
-Start by deleting the deployments controlled by the directors. If not, the deployments will continue to live after deletion of the director, but you will not have any contoll of them through BOSH.  
-This is done by authentication to the director you are about to delete, then list out the deployments with  
+1. **Create the management BOSH director**   
 `./deploy`  
 
 2. **Target the management director**  

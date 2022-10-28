@@ -9,28 +9,28 @@ Start by deleting the deployments controlled by the directors. If not, the deplo
 This is done by authentication to the director you are about to delete, then list out the deployments with  
 `bosh ds`  
 and delete the deployments with  
-`bosh -d <deployment_name> delete`  
+`bosh -d <deployment_name> delete-deployment`  
 and then clean up the oprhaned disks with  
-`bosh disks --orphaned | grep disk- | awk '{print $1}' | xargs -L1 bosh delete-disk -n`
+`bosh disks --orphaned | grep disk- | awk '{print $1}' | xargs -L1 bosh delete-disk -n`  
+This is repeted for all the non-management directors you are about to delete.
 
-2. **Delete director**  
-`./deployments/<env>-bosh/delete`
-
-3. **Step 1 and 2 are performed for all the non-management bosh directors**
-
-4. **Target the management bosh director**  
+2. **Target the management bosh director**  
 `./bcp/select-director (select the management director when prompted)`
 
-5. **Delete core-services vms**  
+3. **Delete director**  
+`./deployments/<env>-bosh/delete`  
+This step is done for all non-management directors you want to delete
+
+4. **Delete core-services vms**  
 `./deployments/bcp-sbx-core-services/delete`
 
-6. **Delete MySQL cluster**  
+5. **Delete MySQL cluster**  
 `./deployments/bcp-sbx-core-database/delete`
 
-7. **Delete orphaned disks**  
+6. **Delete orphaned disks**  
 `bosh disks --orphaned | grep disk- | awk '{print $1}' | xargs -L1 bosh delete-disk -n`
 
-8. **Delete the management bosh director**  
+7. **Delete the management bosh director**  
 `./delete`
 
-9. **Log into vcenter through gui and delete what’s within bcp-sbx-bosh-templates (not automatically deleted).**
+8. **Log into vcenter through gui and delete what’s within bcp-sbx-bosh-templates (not automatically deleted).**
