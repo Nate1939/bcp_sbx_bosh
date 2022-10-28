@@ -1,6 +1,6 @@
 # Deletion
 
-This page goes through the steps to delete the BCP. That is, delete the bosh director(s) deployed by the management bosh, delete the core-services vms and the MySQL cluster. Go back to the main page and read the pre-requisites if you have not already done that.
+This page goes through the steps to delete the BCP. That is, delete the bosh director(s) deployed by the management bosh, delete the core-services vms, the MySQL cluster an the management director itself.. Go back to the main page and read the pre-requisites if you have not already done that.
 
 ## Process
 
