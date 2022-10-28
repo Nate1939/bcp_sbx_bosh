@@ -6,7 +6,7 @@ This page goes through the steps to delete the BCP. That is, delete the bosh dir
 
 ### Delete the directors deployed by the management BOSH
 
-1. Start by deleting the deployments controlled by the directors. If not, the deployments will continue to live after deletion of the director, but you will not have any contoll of them through BOSH.
+1. Start by deleting the deployments controlled by the directors. If not, the deployments will continue to live after deletion of the director, but you will not have any contoll of them through BOSH.  
 This is done by authentication to the director you are about to delete, then list out the deployments with `bosh ds` and delete the deployments with `bosh -d <deployment_name> delete` and then clean up the oprhaned disks with `bosh disks --orphaned | grep disk- | awk '{print $1}' | xargs -L1 bosh delete-disk -n`
 
 2. ./deployments/<env>-bosh/delete
@@ -21,7 +21,7 @@ This is done by authentication to the director you are about to delete, then lis
 
 7. bosh disks --orphaned | grep disk- | awk '{print $1}' | xargs -L1 bosh delete-disk -n
 
-8. Delete the management bosh directo:
+8. Delete the management bosh director:  
 ./delete
 
 9. Log into vcenter through gui and delete what’s within bcp-sbx-bosh-templates (not automatically deleted).
