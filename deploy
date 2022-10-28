@@ -84,7 +84,7 @@ bosh create-env "bcp/clones/bosh-deployment/bosh.yml" \
         -v ldap_bind_dn="$(az keyvault secret show --vault-name "bosh-prod-uks-kv" --name "ldap-$DEPLOYMENT_DIRECTOR-bind-dn" --query "value" -o tsv)" \
         -v ldap_bind_password="$(az keyvault secret show --vault-name "bosh-prod-uks-kv" --name "ldap-$DEPLOYMENT_DIRECTOR-bind-password" --query "value" -o tsv)" \
         -v ldap_search_base="OU=DEVLOCAL,DC=dev,DC=local" \
-        -v ldap_group_search_base="OU=Groups,OU=DEVLOCAL,DC=dev,DC=local" \
+        -v ldap_group_search_base="OU=DEVLOCAL,DC=dev,DC=local" \
     -o "ops/bosh-uaa-external-group-mappings.yml"
 
 ##
