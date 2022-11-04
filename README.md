@@ -27,6 +27,10 @@ Please see our [Deployment](docs/deployment.md) page on how to deploy the BOSH C
 
 Please see our [Deletion](docs/deletion.md) page on how to delete the BCP.
 
+## Target an existing director
+
+To get started working with a director in this platform, see our [Setup](docs/setup.md) page.
+
 ## Backup & Recovery
 
 Please see our [BBR](docs/bbr.md) page.
